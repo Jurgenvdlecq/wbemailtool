@@ -9,32 +9,39 @@ function genereerEmail() {
     const kenteken = document.getElementById('kenteken').value;
     const datum = document.getElementById('datum').value;
     const tijdstip = document.getElementById('tijdstip').value;
+    
     let tekst = '';
+    const aanspreekvorm = document.getElementById('aanspreekvorm').value;
+    const voornaam = document.getElementById('voornaam').value;
+    const achternaam = document.getElementById('klantnaam').value;
+    const aanspreek = (aanspreekvorm === 'jij') ? voornaam : (aanspreekvorm === 'u_mevrouw' ? 'mevrouw ' + achternaam : 'heer ' + achternaam);
+    const begroeting = (aanspreekvorm === 'jij') ? 'Beste ' + voornaam : 'Geachte ' + aanspreek;
+
 
     switch (type) {
         case 'internetlead':
-            tekst = `Geachte ${klant},\n\nHartelijk dank voor uw interesse in een nieuwe SEAT ${model} via onze website.\n\nConform uw aanvraag ontvangt u hierbij een vrijblijvende offerte voor de uitvoering in de kleur ${kleur}.\nDe rijklaarprijs bedraagt €${prijs}, inclusief actiekorting, afleverpakket, leges en fabrieksgarantie.\nDe verwachte levertijd is ${levertijd} na akkoord.\n\nIndien u graag een proefrit wilt maken of de auto in het echt wilt bekijken, vernemen wij dit graag van u.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
+            tekst = `${begroeting},\n\nHartelijk dank voor uw interesse in een nieuwe SEAT ${model} via onze website.\n\nConform uw aanvraag ontvangt u hierbij een vrijblijvende offerte voor de uitvoering in de kleur ${kleur}.\nDe rijklaarprijs bedraagt €${prijs}, inclusief actiekorting, afleverpakket, leges en fabrieksgarantie.\nDe verwachte levertijd is ${levertijd} na akkoord.\n\nIndien u graag een proefrit wilt maken of de auto in het echt wilt bekijken, vernemen wij dit graag van u.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
             break;
         case 'telefonisch':
-            tekst = `Geachte ${klant},\n\nZoals telefonisch besproken ontvangt u hierbij een vrijblijvende offerte voor een nieuwe SEAT ${model} in de kleur ${kleur}.\n\nDe rijklaarprijs bedraagt €${prijs}, inclusief alle bijkomende kosten en fabrieksgarantie.\nDe levertijd is circa ${levertijd} na akkoord.\n\nIndien u vragen heeft of de auto wenst te bezichtigen, neem dan gerust contact met ons op.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
+            tekst = `${begroeting},\n\nZoals telefonisch besproken ontvangt u hierbij een vrijblijvende offerte voor een nieuwe SEAT ${model} in de kleur ${kleur}.\n\nDe rijklaarprijs bedraagt €${prijs}, inclusief alle bijkomende kosten en fabrieksgarantie.\nDe levertijd is circa ${levertijd} na akkoord.\n\nIndien u vragen heeft of de auto wenst te bezichtigen, neem dan gerust contact met ons op.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
             break;
         case 'showroom':
-            tekst = `Geachte ${klant},\n\nHartelijk dank voor uw bezoek aan onze showroom. Zoals besproken ontvangt u hierbij de offerte voor een nieuwe SEAT ${model}, in de kleur ${kleur}.\n\nDe rijklaarprijs bedraagt €${prijs}, inclusief afleverpakket, leges en fabrieksgarantie.\nDe verwachte levertijd is ${levertijd} na akkoord.\n\nMocht u nog vragen hebben of de offerte nader willen bespreken, dan staan wij graag voor u klaar.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
+            tekst = `${begroeting},\n\nHartelijk dank voor uw bezoek aan onze showroom. Zoals besproken ontvangt u hierbij de offerte voor een nieuwe SEAT ${model}, in de kleur ${kleur}.\n\nDe rijklaarprijs bedraagt €${prijs}, inclusief afleverpakket, leges en fabrieksgarantie.\nDe verwachte levertijd is ${levertijd} na akkoord.\n\nMocht u nog vragen hebben of de offerte nader willen bespreken, dan staan wij graag voor u klaar.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
             break;
         case 'offerte_zonder_inruil':
-            tekst = `Geachte ${klant},\n\nConform onze afspraak ontvangt u hierbij de offerte voor een nieuwe SEAT ${model} in de kleur ${kleur}, zonder inruil.\n\nDe rijklaarprijs bedraagt €${prijs}, inclusief afleverpakket, garantie en leges.\nLevertijd: ${levertijd}.\n\nLaat ons gerust weten indien u vragen heeft of de offerte verder wenst te bespreken.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
+            tekst = `${begroeting},\n\nConform onze afspraak ontvangt u hierbij de offerte voor een nieuwe SEAT ${model} in de kleur ${kleur}, zonder inruil.\n\nDe rijklaarprijs bedraagt €${prijs}, inclusief afleverpakket, garantie en leges.\nLevertijd: ${levertijd}.\n\nLaat ons gerust weten indien u vragen heeft of de offerte verder wenst te bespreken.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
             break;
         case 'offerte_met_inruil':
-            tekst = `Geachte ${klant},\n\nHierbij ontvangt u de offerte voor een nieuwe SEAT ${model} in de kleur ${kleur}, inclusief een voorlopig inruilvoorstel voor uw huidige auto (kenteken: ${kenteken}).\n\nDe rijklaarprijs bedraagt €${prijs}.\nDe indicatieve inruilwaarde van uw voertuig is €${inruilprijs}, onder voorbehoud van fysieke inspectie.\nDe levertijd bedraagt ${levertijd}.\n\nWij nodigen u graag uit in onze showroom voor een definitieve taxatie.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
+            tekst = `${begroeting},\n\nHierbij ontvangt u de offerte voor een nieuwe SEAT ${model} in de kleur ${kleur}, inclusief een voorlopig inruilvoorstel voor uw huidige auto (kenteken: ${kenteken}).\n\nDe rijklaarprijs bedraagt €${prijs}.\nDe indicatieve inruilwaarde van uw voertuig is €${inruilprijs}, onder voorbehoud van fysieke inspectie.\nDe levertijd bedraagt ${levertijd}.\n\nWij nodigen u graag uit in onze showroom voor een definitieve taxatie.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
             break;
         case 'private_lease':
-            tekst = `Geachte ${klant},\n\nZoals besproken ontvangt u hierbij de private leaseofferte voor een nieuwe SEAT ${model} in de kleur ${kleur}.\n\nLooptijd: 48 maanden\nKilometrage: 15.000 km/jaar\nMaandbedrag: €XXX incl. btw\nInclusief: onderhoud, verzekering, wegenbelasting, pechhulp en vervangend vervoer\n\nDe levertijd is ${levertijd}.\n\nLaat ons weten indien u interesse heeft of aanvullende vragen.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
+            tekst = `${begroeting},\n\nZoals besproken ontvangt u hierbij de private leaseofferte voor een nieuwe SEAT ${model} in de kleur ${kleur}.\n\nLooptijd: 48 maanden\nKilometrage: 15.000 km/jaar\nMaandbedrag: €XXX incl. btw\nInclusief: onderhoud, verzekering, wegenbelasting, pechhulp en vervangend vervoer\n\nDe levertijd is ${levertijd}.\n\nLaat ons weten indien u interesse heeft of aanvullende vragen.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
             break;
         case 'proefrit':
-            tekst = `Geachte ${klant},\n\nUw proefrit met de SEAT ${model} in de kleur ${kleur} is bevestigd.\n\nWij verwachten u graag op ${datum} om ${tijdstip} bij Wittebrug SEAT, Donau 120, 2491 BC in Den Haag.\n\nLaat het ons weten indien u verhinderd bent of aanvullende vragen heeft.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
+            tekst = `${begroeting},\n\nUw proefrit met de SEAT ${model} in de kleur ${kleur} is bevestigd.\n\nWij verwachten u graag op ${datum} om ${tijdstip} bij Wittebrug SEAT, Donau 120, 2491 BC in Den Haag.\n\nLaat het ons weten indien u verhinderd bent of aanvullende vragen heeft.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
             break;
         case 'afspraak':
-            tekst = `Geachte ${klant},\n\nUw afspraak staat gepland op ${datum} om ${tijdstip} bij Wittebrug SEAT, Donau 120, 2491 BC in Den Haag.\n\nIndien u verhinderd bent of iets wenst te wijzigen, vernemen wij dat graag van u.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
+            tekst = `${begroeting},\n\nUw afspraak staat gepland op ${datum} om ${tijdstip} bij Wittebrug SEAT, Donau 120, 2491 BC in Den Haag.\n\nIndien u verhinderd bent of iets wenst te wijzigen, vernemen wij dat graag van u.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
             break;
     }
 
