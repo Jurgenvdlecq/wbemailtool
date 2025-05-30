@@ -87,3 +87,38 @@ function toonVelden() {
 }
 
 document.addEventListener("DOMContentLoaded", toonVelden);
+
+function formatDatum(d) {
+    if (!d) return '';
+    const maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni',
+                     'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+    const parts = d.split('-');
+    return parseInt(parts[2]) + ' ' + maanden[parseInt(parts[1]) - 1] + ' ' + parts[0];
+}
+
+function toonVelden() {
+    const type = document.getElementById('emailtype').value;
+    const velden = {
+        model: ["internetlead", "telefonisch", "showroom", "offerte_zonder_inruil", "offerte_met_inruil", "private_lease", "proefrit"],
+        kleur: ["internetlead", "telefonisch", "showroom", "offerte_zonder_inruil", "offerte_met_inruil", "private_lease", "proefrit"],
+        prijs: ["internetlead", "telefonisch", "showroom", "offerte_zonder_inruil", "offerte_met_inruil"],
+        levertijd: ["internetlead", "telefonisch", "showroom", "offerte_zonder_inruil", "offerte_met_inruil", "private_lease"],
+        inruilprijs: ["offerte_met_inruil"],
+        kenteken: ["offerte_met_inruil"],
+        datum: ["proefrit", "afspraak"],
+        tijdstip: ["proefrit", "afspraak"],
+        looptijd: ["private_lease"],
+        km: ["private_lease"],
+        risico: ["private_lease"],
+        maandbedrag: ["private_lease"]
+    };
+
+    for (let veld in velden) {
+        const div = document.getElementById("veld-" + veld);
+        if (div) {
+            div.style.display = velden[veld].includes(type) ? "block" : "none";
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded", toonVelden);
