@@ -47,3 +47,28 @@ function kopieerTekst() {
         alert('De e-mailtekst is gekopieerd!');
     });
 }
+function toonVelden() {
+    const type = document.getElementById('emailtype').value;
+
+    const velden = {
+        model: ["internetlead", "telefonisch", "showroom", "offerte_zonder_inruil", "offerte_met_inruil", "private_lease", "proefrit"],
+        kleur: ["internetlead", "telefonisch", "showroom", "offerte_zonder_inruil", "offerte_met_inruil", "private_lease", "proefrit"],
+        prijs: ["internetlead", "telefonisch", "showroom", "offerte_zonder_inruil", "offerte_met_inruil"],
+        levertijd: ["internetlead", "telefonisch", "showroom", "offerte_zonder_inruil", "offerte_met_inruil", "private_lease"],
+        inruilprijs: ["offerte_met_inruil"],
+        kenteken: ["offerte_met_inruil"],
+        datum: ["proefrit", "afspraak"],
+        tijdstip: ["proefrit", "afspraak"]
+    };
+
+    for (let veld in velden) {
+        const div = document.getElementById("veld-" + veld);
+        if (velden[veld].includes(type)) {
+            div.style.display = "block";
+        } else {
+            div.style.display = "none";
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded", toonVelden);
