@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>E-mailgenerator Wittebrug</title>
+    <title>Wittebrug SEAT E-mailgenerator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -24,12 +24,16 @@
             <label>Klantnaam: <input type="text" id="klantnaam"></label>
             <label>Model: <input type="text" id="model"></label>
             <label>Kleur: <input type="text" id="kleur"></label>
-            <label>Rijklaarprijs: <input type="text" id="prijs"></label>
+            <label>Rijklaarprijs (€): <input type="text" id="prijs"></label>
             <label>Levertijd: <input type="text" id="levertijd"></label>
+            <label>Inruilprijs (€): <input type="text" id="inruilprijs"></label>
+            <label>Kenteken inruilauto: <input type="text" id="kenteken"></label>
+            <label>Datum afspraak/proefrit: <input type="date" id="datum"></label>
+            <label>Tijdstip afspraak/proefrit: <input type="time" id="tijdstip"></label>
             <button onclick="genereerEmail()">Creëer e-mail</button>
         </div>
         <div class="preview">
-            <h2>Preview</h2>
+            <h2>Voorvertoning e-mail</h2>
             <pre id="emailPreview"></pre>
             <button onclick="kopieerTekst()">Kopieer naar klembord</button>
         </div>

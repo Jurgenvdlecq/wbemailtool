@@ -1,4 +1,4 @@
 body { font-family: Arial; margin: 20px; }
-.container { display: flex; gap: 40px; }
+.container { display: flex; gap: 40px; flex-wrap: wrap; }
 .form label { display: block; margin-bottom: 10px; }
-.preview pre { background: #f4f4f4; padding: 10px; border: 1px solid #ccc; }
+.preview pre { background: #f4f4f4; padding: 10px; border: 1px solid #ccc; white-space: pre-wrap; }
