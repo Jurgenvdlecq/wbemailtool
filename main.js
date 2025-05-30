@@ -122,3 +122,12 @@ function toonVelden() {
 }
 
 document.addEventListener("DOMContentLoaded", toonVelden);
+
+function setOutlookLink(subject, body) {
+    const outlookLink = document.getElementById('outlookButton');
+    outlookLink.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    outlookLink.style.display = 'inline-block';
+}
+
+// Aan einde van genereerEmail functie
+setOutlookLink(subject, tekst);
