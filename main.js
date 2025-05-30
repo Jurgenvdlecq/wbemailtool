@@ -31,10 +31,10 @@ function genereerEmail() {
             tekst = `Geachte ${klant},\n\nZoals besproken ontvangt u hierbij de private leaseofferte voor een nieuwe SEAT ${model} in de kleur ${kleur}.\n\nLooptijd: 48 maanden\nKilometrage: 15.000 km/jaar\nMaandbedrag: €XXX incl. btw\nInclusief: onderhoud, verzekering, wegenbelasting, pechhulp en vervangend vervoer\n\nDe levertijd is ${levertijd}.\n\nLaat ons weten indien u interesse heeft of aanvullende vragen.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
             break;
         case 'proefrit':
-            tekst = `Geachte ${klant},\n\nUw proefrit met de SEAT ${model} in de kleur ${kleur} is bevestigd.\n\nWij verwachten u graag op ${datum} om ${tijdstip} bij Wittebrug SEAT, Donau 120, 2491 BC in Den Haag.\n\nLaat het ons weten indien u verhinderd bent of aanvullende vragen heeft.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
+            tekst = `Geachte ${klant},\n\nUw proefrit met de SEAT ${model} in de kleur ${kleur} is bevestigd.\n\nWij verwachten u graag op ${formatDatum(datum) + ' om ' + tijdstip bij Wittebrug SEAT, Donau 120, 2491 BC in Den Haag.\n\nLaat het ons weten indien u verhinderd bent of aanvullende vragen heeft.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
             break;
         case 'afspraak':
-            tekst = `Geachte ${klant},\n\nUw afspraak staat gepland op ${datum} om ${tijdstip} bij Wittebrug SEAT, Donau 120, 2491 BC in Den Haag.\n\nIndien u verhinderd bent of iets wenst te wijzigen, vernemen wij dat graag van u.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
+            tekst = `Geachte ${klant},\n\nUw afspraak staat gepland op ${formatDatum(datum) + ' om ' + tijdstip bij Wittebrug SEAT, Donau 120, 2491 BC in Den Haag.\n\nIndien u verhinderd bent of iets wenst te wijzigen, vernemen wij dat graag van u.\n\nMet vriendelijke groet,\nWittebrug SEAT`;
             break;
     }
 
@@ -72,3 +72,11 @@ function toonVelden() {
 }
 
 document.addEventListener("DOMContentLoaded", toonVelden);
+
+function formatDatum(d) {
+    if (!d) return '';
+    const maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni',
+                     'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+    const parts = d.split('-'); // yyyy-mm-dd
+    return parseInt(parts[2]) + ' ' + maanden[parseInt(parts[1]) - 1] + ' ' + parts[0];
+}
