@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>E-mailgenerator Wittebrug</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Wittebrug SEAT E-mailgenerator</h1>
+    <div class="container">
+        <div class="form">
+            <label>Klantnaam: <input type="text" id="klantnaam"></label>
+            <label>Model: <input type="text" id="model"></label>
+            <label>Kleur: <input type="text" id="kleur"></label>
+            <label>Rijklaarprijs: <input type="text" id="prijs"></label>
+            <label>Levertijd: <input type="text" id="levertijd"></label>
+            <button onclick="genereerEmail()">Creëer e-mail</button>
+        </div>
+        <div class="preview">
+            <h2>Preview</h2>
+            <pre id="emailPreview"></pre>
+            <button onclick="kopieerTekst()">Kopieer naar klembord</button>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

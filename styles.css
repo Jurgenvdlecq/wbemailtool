@@ -1,0 +1,4 @@
+body { font-family: Arial; margin: 20px; }
+.container { display: flex; gap: 40px; }
+.form label { display: block; margin-bottom: 10px; }
+.preview pre { background: #f4f4f4; padding: 10px; border: 1px solid #ccc; }
