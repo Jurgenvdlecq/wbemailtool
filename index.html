@@ -27,26 +27,52 @@
         <option value="lease">Private lease</option>
       </select>
     </label><br>
-    <label>Model: <input type="text" id="model"></label><br>
-    <label>Kleur: <input type="text" id="kleur"></label><br>
-    <label>Prijs (€): <input type="text" id="prijs"></label><br>
-    <label>Levertijd: <input type="text" id="levertijd"></label><br>
-    <label>Inruilprijs (€): <input type="text" id="inruilprijs"></label><br>
-    <label>Kenteken inruilauto: <input type="text" id="kenteken"></label><br>
-    <label>Datum: <input type="date" id="datum"></label>
-    <label>Tijd: <input type="time" id="tijd"></label><br>
-    <label>Lease – Looptijd: <input type="text" id="looptijd"></label><br>
-    <label>Kilometers per jaar: <input type="text" id="kilometers"></label><br>
-    <label>Eigen risico: <input type="text" id="eigenrisico"></label><br>
-    <label>Maandbedrag (€): <input type="text" id="maandbedrag"></label><br>
+
+    <label id="veld-model">Model: <input type="text" id="model"></label><br>
+    <label id="veld-kleur">Kleur: <input type="text" id="kleur"></label><br>
+    <label id="veld-prijs">Prijs (€): <input type="text" id="prijs"></label><br>
+    <label id="veld-levertijd">Levertijd: <input type="text" id="levertijd"></label><br>
+    <label id="veld-inruilprijs">Inruilprijs (€): <input type="text" id="inruilprijs"></label><br>
+    <label id="veld-kenteken">Kenteken inruilauto: <input type="text" id="kenteken"></label><br>
+    <label id="veld-datum">Datum: <input type="date" id="datum"></label>
+    <label id="veld-tijd">Tijd: <input type="time" id="tijd"></label><br>
+    <label id="veld-looptijd">Lease – Looptijd: <input type="text" id="looptijd"></label><br>
+    <label id="veld-kilometers">Kilometers per jaar: <input type="text" id="kilometers"></label><br>
+    <label id="veld-eigenrisico">Eigen risico: <input type="text" id="eigenrisico"></label><br>
+    <label id="veld-maandbedrag">Maandbedrag (€): <input type="text" id="maandbedrag"></label><br>
+
     <button type="button" onclick="genereerEmail()">Creëer e-mail</button>
     <a id="outlookButton" style="display:none;" target="_blank">
       <button type="button">Open in Outlook</button>
     </a>
   </form>
+
   <h2>Gegenereerde e-mail:</h2>
   <pre id="output"></pre>
   <button onclick="kopieerTekst()">Kopieer naar klembord</button>
+
   <script src="main.js"></script>
+  <script>
+    const veldgroepen = {
+      offerte: ["model", "kleur", "prijs", "levertijd"],
+      inruil: ["model", "kleur", "prijs", "levertijd", "inruilprijs", "kenteken"],
+      proefrit: ["model", "levertijd", "datum", "tijd"],
+      afspraak: ["model", "datum", "tijd"],
+      showroom: ["model", "kleur", "prijs", "levertijd"],
+      lease: ["model", "kleur", "levertijd", "looptijd", "kilometers", "eigenrisico", "maandbedrag"]
+    };
+
+    function toggleVelden() {
+      const gekozen = document.getElementById("emailtype").value;
+      const tonen = veldgroepen[gekozen] || [];
+      ["model", "kleur", "prijs", "levertijd", "inruilprijs", "kenteken", "datum", "tijd", "looptijd", "kilometers", "eigenrisico", "maandbedrag"]
+        .forEach(id => {
+          document.getElementById("veld-" + id).style.display = tonen.includes(id) ? "block" : "none";
+        });
+    }
+
+    document.getElementById("emailtype").addEventListener("change", toggleVelden);
+    window.addEventListener("DOMContentLoaded", toggleVelden);
+  </script>
 </body>
 </html>
