@@ -29,16 +29,13 @@ function genereerEmail() {
   let tekst = `${aanspreking}\n\n`;
 
   if (type === "offerte") {
-    tekst += jevorm
-      ? `Hartelijk dank voor je interesse in de SEAT ${model}. Zoals gevraagd ontvang je hierbij geheel vrijblijvend de offerte.\n\n`
-      : `Hartelijk dank voor uw interesse in de SEAT ${model}. Zoals aangevraagd ontvangt u hierbij geheel vrijblijvend de offerte.\n\n`;
     tekst += `In de kleur ${uitvoering}.\n`;
     tekst += `De totale aanschafprijs bedraagt €${prijs}, inclusief afleverkosten.\n`;
     tekst += `De verwachte levertijd is ongeveer ${levertijd} na akkoord.\n\n`;
     tekst += `De offerte heb ik toegevoegd als bijlage.\n\n`;
     tekst += jevorm
-      ? `Uiteraard ben je van harte welkom om de auto in het echt te komen bekijken of een proefrit te maken. Laat het gerust weten als ik je ergens mee kan helpen of als je de offerte verder wilt bespreken.`
-      : `Uiteraard bent u van harte welkom om de auto in het echt te komen bekijken of een proefrit te maken. Laat het gerust weten als ik u ergens mee kan helpen of als u de offerte verder wilt bespreken.`;
+      ? `Uiteraard ben je van harte welkom om de auto in het echt te bekijken of een proefrit te maken. Laat het gerust weten als ik je ergens mee kan helpen of als je de offerte verder wilt bespreken.`
+      : `Uiteraard bent u van harte welkom om de auto in het echt te bekijken of een proefrit te maken. Laat het gerust weten als ik u ergens mee kan helpen of als u de offerte verder wilt bespreken.`;
   }
 
   if (type === "inruil") {
@@ -60,6 +57,29 @@ function genereerEmail() {
     tekst += `Mocht u de private lease aanvraag willen starten, kunt u positief op deze mail reageren. Ik zal dan direct de aanvraag voor u starten.\n\n`;
     tekst += `U ontvangt daarna een link vanuit Volkswagen Pon Financial Services (VWPFS) om de krediettoetsing te doorlopen.\n\n`;
     tekst += `Ik hoor graag uw reactie op ons voorstel. Mocht u nog vragen hebben, laat het gerust weten. Ik help u graag verder.`;
+  }
+
+  if (type === "proefrit") {
+    tekst += `Hierbij bevestigen wij uw proefritafspraak op ${datumFormatted} om ${tijd} met de SEAT ${model}.\n\n`;
+    tekst += `Wij verwelkomen u bij Wittebrug SEAT, Donau 120, 2491 BC Den Haag. Vergeet uw rijbewijs niet mee te nemen.\n\n`;
+    tekst += `Neem gerust contact met ons op bij vragen of wijzigingen.\n\n`;
+    tekst += `We kijken ernaar uit u te mogen ontvangen.`;
+  }
+
+  if (type === "afspraak") {
+    tekst += `Leuk dat we een afspraak hebben gepland voor de SEAT ${model} op ${datumFormatted} om ${tijd}.\n\n`;
+    tekst += `We ontvangen u graag bij Wittebrug SEAT, Donau 120 in Den Haag.\n\n`;
+    tekst += `Heeft u nog vragen of wilt u de afspraak wijzigen? Laat het gerust even weten.\n\n`;
+    tekst += `Tot dan!`;
+  }
+
+  if (type === "showroom") {
+    tekst += `Bedankt voor uw bezoek aan onze showroom.\n\n`;
+    tekst += `Zoals besproken ontvangt u hierbij de offerte voor de SEAT ${model} in de kleur ${uitvoering}.\n`;
+    tekst += `De totale aanschafprijs bedraagt €${prijs}, inclusief afleverkosten.\n`;
+    tekst += `De verwachte levertijd is ${levertijd}.\n\n`;
+    tekst += `De offerte heb ik als bijlage toegevoegd.\n\n`;
+    tekst += `Heeft u nog vragen of opmerkingen? Ik hoor het graag.`;
   }
 
   tekst += `\n\nMet vriendelijke groet,\nWittebrug SEAT`;
