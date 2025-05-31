@@ -1,1 +1,1 @@
-// JavaScript komt hier
+// Volledige script komt in volgende stap
