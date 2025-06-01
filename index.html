@@ -94,7 +94,7 @@
               <input type="time" id="tijd">
             </label>
           </div>
-          <div class="form-group" id="veld-loop tijd">
+          <div class="form-group" id="veld-looptijd">
             <label for="looptijd">Lease – Looptijd (maanden):
               <input type="number" id="looptijd" min="1">
             </label>
@@ -183,6 +183,7 @@
       document.getElementById("generateBtn").disabled = !valid;
     }
 
+    document.getElementById("generateBtn").addEventListener("click", genereerEmail);
     document.getElementById("emailtype").addEventListener("change", toggleVelden);
     document.getElementById("merk").addEventListener("change", validateForm);
     document.getElementById("model").addEventListener("input", validateForm);
