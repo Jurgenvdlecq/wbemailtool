@@ -9,7 +9,6 @@ function genereerEmail() {
                       aanhef === "heer" ? `Geachte heer ${achternaam},` :
                       `Geachte mevrouw ${achternaam},`;
 
-  const jevorm = aanhef === "voornaam";
   const model = document.getElementById("model")?.value || "";
   const uitvoering = document.getElementById("kleur")?.value || "";
   const prijs = document.getElementById("prijs")?.value || "";
@@ -33,21 +32,15 @@ function genereerEmail() {
     tekst += `De totale aanschafprijs bedraagt €${prijs}, inclusief afleverkosten.\n`;
     tekst += `De verwachte levertijd is ongeveer ${levertijd} na akkoord.\n\n`;
     tekst += `De offerte heb ik toegevoegd als bijlage.\n\n`;
-    tekst += jevorm
-      ? `Uiteraard ben je van harte welkom om de auto in het echt te bekijken of een proefrit te maken. Laat het gerust weten als ik je ergens mee kan helpen of als je de offerte verder wilt bespreken.`
-      : `Uiteraard bent u van harte welkom om de auto in het echt te bekijken of een proefrit te maken. Laat het gerust weten als ik u ergens mee kan helpen of als u de offerte verder wilt bespreken.`;
+    tekst += `Uiteraard bent u van harte welkom om de auto in het echt te bekijken of een proefrit te maken. Laat het gerust weten als ik u ergens mee kan helpen of als u de offerte verder wilt bespreken.`;
   }
 
   if (type === "inruil") {
-    tekst += jevorm
-      ? `Leuk om je zojuist gesproken te hebben! Bedankt voor je interesse in de SEAT ${model}.\n\n`
-      : `Leuk om u zojuist gesproken te hebben! Bedankt voor uw interesse in de SEAT ${model}.\n\n`;
+    tekst += `Leuk om u zojuist gesproken te hebben! Bedankt voor uw interesse in de SEAT ${model}.\n\n`;
     tekst += `Zoals besproken heb ik een offerte voor u opgesteld, inclusief de taxatie van uw inruilauto.\n\n`;
     tekst += `✔️ De offerte voor de SEAT ${model} met specificaties en prijsdetails.\n✔️ De taxatie van uw huidige auto, met een inruilprijs van €${inruilprijs}.\n✔️ Eventuele financierings- of leaseopties (indien van toepassing).\n\n`;
     tekst += `De offerte heb ik toegevoegd als bijlage.\n\n`;
-    tekst += jevorm
-      ? `Ik ben erg benieuwd wat je van mijn voorstel vindt. Laat je het mij weten of alles naar wens is? Mocht je nog vragen hebben of aanpassingen willen bespreken, dan hoor ik dat graag.`
-      : `Ik ben erg benieuwd wat u van mijn voorstel vindt. Laat u het mij weten of alles naar wens is? Mocht u nog vragen hebben of aanpassingen willen bespreken, dan hoor ik dat graag.`;
+    tekst += `Ik ben erg benieuwd wat u van mijn voorstel vindt. Laat u het mij weten of alles naar wens is? Mocht u nog vragen hebben of aanpassingen willen bespreken, dan hoor ik dat graag.`;
   }
 
   if (type === "lease") {
@@ -97,8 +90,16 @@ function genereerEmail() {
 
   const subject = onderwerp[type] || `SEAT ${model}`;
   const mailBody = encodeURIComponent(tekst);
-  document.getElementById("outlookButton").href = `mailto:?subject=${encodeURIComponent(subject)}&body=${mailBody}`;
-  document.getElementById("outlookButton").style.display = 'inline-block';
+  const outlookBtn = document.getElementById("outlookBtn");
+  outlookBtn.onclick = () => {
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${mailBody}`;
+  };
+  outlookBtn.style.display = 'inline-block';
+
+  // Feedback
+  const feedback = document.getElementById("feedback");
+  feedback.textContent = "✅ E-mailtekst is gegenereerd!";
+  setTimeout(() => feedback.textContent = "", 3000);
 }
 
 function kopieerTekst() {
