@@ -87,6 +87,16 @@ function genereerEmail() {
     tekst += `Heeft u nog vragen of opmerkingen? Laat het gerust weten; ik help u graag verder.`;
   }
 
+  
+  if (type === "status") {
+    const leverdatum = document.getElementById("leverdatum")?.value;
+    const leverdatumFormatted = leverdatum ? new Date(leverdatum).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }) : "";
+    tekst += `Wij hebben voor u de ${merk} ${model} in bestelling staan en willen u graag op de hoogte houden van de status van deze bestelling.\n\n`;
+    tekst += `We verwachten dat wij de auto rond ${leverdatumFormatted} kunnen leveren. Op dit moment is dit nog niet definitief, dus dit kan nog wijzigen.\n\n`;
+    tekst += `Mocht dit wijzigen, dan laten wij het uiteraard aan u weten.\n\n`;
+    tekst += `Mocht u nog vragen hebben, neem dan gerust contact met ons op.`;
+  }
+
   if (type === "followup") {
     tekst += `Enige tijd geleden ontving u van mij de offerte voor de ${merk} ${model}.\n`;
     tekst += `Ik hoor graag wat u ervan vindt en of u nog vragen heeft over de offerte of de uitvoering.\n\n`;
@@ -102,7 +112,8 @@ function genereerEmail() {
     afspraak: `Bevestiging afspraak – ${merk} ${model}`,
     showroom: `Offerte ${merk} ${model} – nav showroombezoek`,
     lease: `Private lease ${merk} ${model} – voorstel`,
-    followup: `Follow-up offerte – ${merk} ${model}`
+    followup: `Follow-up offerte – ${merk} ${model}`,
+    status: `Status levering – ${merk} ${model}`
   };
 
   const subject = onderwerp[type] || `${merk} ${model}`;
