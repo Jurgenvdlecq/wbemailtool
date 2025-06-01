@@ -88,7 +88,6 @@ function genereerEmail() {
   }
 
   if (type === "followup") {
-    tekst += `Beste ${achternaam},\n\n`;
     tekst += `Enige tijd geleden ontving u van mij de offerte voor de ${merk} ${model}.\n`;
     tekst += `Ik hoor graag wat u ervan vindt en of u nog vragen heeft over de offerte of de uitvoering.\n\n`;
     tekst += `Uiteraard sta ik voor u klaar om eventuele onderdelen van de offerte toe te lichten of alternatieve opties te bespreken.`;
