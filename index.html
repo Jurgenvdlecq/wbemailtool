@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Wittebrug SEAT E-mailgenerator</title>
+  <title>Wittebrug SEAT/CUPRA E-mailgenerator</title>
   <link href="styles.css" rel="stylesheet">
 </head>
 <body>
   <header>
     <img src="wittebrug_logo.png" alt="Wittebrug Logo" class="logo">
-    <h1>Wittebrug SEAT E-mailgenerator</h1>
+    <h1>Wittebrug E-mailgenerator</h1>
   </header>
   <main>
     <section class="form-section">
@@ -33,6 +33,20 @@
         </fieldset>
 
         <fieldset>
+          <legend>Merk en Model</legend>
+          <label for="merk">Merk:
+            <select id="merk" required>
+              <option value="">-- Kies --</option>
+              <option value="SEAT">SEAT</option>
+              <option value="CUPRA">CUPRA</option>
+            </select>
+          </label>
+          <label for="model">Model:
+            <input type="text" id="model" required aria-required="true">
+          </label>
+        </fieldset>
+
+        <fieldset>
           <legend>Type e-mail</legend>
           <label for="emailtype">Type e-mail:
             <select id="emailtype" required>
@@ -50,16 +64,6 @@
 
         <fieldset>
           <legend>Specifieke gegevens</legend>
-          <div class="form-group" id="veld-model">
-            <label for="model">Model:
-              <input type="text" id="model" required aria-required="true">
-            </label>
-          </div>
-          <div class="form-group" id="veld-kleur">
-            <label for="kleur">Kleur:
-              <input type="text" id="kleur" required aria-required="true">
-            </label>
-          </div>
           <div class="form-group" id="veld-prijs">
             <label for="prijs">Prijs (€):
               <input type="number" id="prijs" min="0" step="0.01" required aria-required="true">
@@ -90,7 +94,7 @@
               <input type="time" id="tijd">
             </label>
           </div>
-          <div class="form-group" id="veld-looptijd">
+          <div class="form-group" id="veld-loop tijd">
             <label for="looptijd">Lease – Looptijd (maanden):
               <input type="number" id="looptijd" min="1">
             </label>
@@ -139,40 +143,39 @@
 
   <script src="main.js"></script>
   <script>
-    // Velden-detectie config
     const veldgroepen = {
-      offerte: ["model", "kleur", "prijs", "levertijd"],
-      inruil: ["model", "kleur", "prijs", "levertijd", "inruilprijs", "kenteken"],
-      proefrit: ["model", "datum", "tijd"],
-      afspraak: ["model", "datum", "tijd"],
-      showroom: ["model", "kleur", "prijs", "levertijd"],
-      lease: ["model", "kleur", "levertijd", "looptijd", "kilometers", "eigenrisico", "maandbedrag", "banden"],
+      offerte: ["prijs", "levertijd"],
+      inruil: ["prijs", "levertijd", "inruilprijs", "kenteken"],
+      proefrit: ["datum", "tijd"],
+      afspraak: ["datum", "tijd"],
+      showroom: ["prijs", "levertijd"],
+      lease: ["prijs", "levertijd", "looptijd", "kilometers", "eigenrisico", "maandbedrag", "banden"],
       followup: ["model"]
     };
 
-    const alleVelden = ["model", "kleur", "prijs", "levertijd", "inruilprijs", "kenteken", "datum", "tijd", "looptijd", "kilometers", "eigenrisico", "maandbedrag", "banden"];
+    const alleVelden = ["prijs", "levertijd", "inruilprijs", "kenteken", "datum", "tijd", "looptijd", "kilometers", "eigenrisico", "maandbedrag", "banden"];
 
     function toggleVelden() {
       const gekozen = document.getElementById("emailtype").value;
       const tonen = veldgroepen[gekozen] || [];
       alleVelden.forEach(id => {
         const elem = document.getElementById("veld-" + id);
-        if(elem) elem.style.display = tonen.includes(id) ? "block" : "none";
+        if (elem) elem.style.display = tonen.includes(id) ? "block" : "none";
       });
       validateForm();
     }
 
     function validateForm() {
       let valid = true;
-      // Check aanhef en type verplicht
-      if(!document.getElementById("aanhef").value) valid = false;
-      if(!document.getElementById("emailtype").value) valid = false;
-      // Check zichtbare velden
+      if (!document.getElementById("aanhef").value) valid = false;
+      if (!document.getElementById("merk").value) valid = false;
+      if (!document.getElementById("model").value) valid = false;
+      if (!document.getElementById("emailtype").value) valid = false;
       alleVelden.forEach(id => {
         const elem = document.getElementById("veld-" + id);
-        if(elem && elem.style.display !== "none") {
+        if (elem && elem.style.display !== "none") {
           const input = document.getElementById(id);
-          if(input && input.hasAttribute("required") && !input.value) {
+          if (input && input.hasAttribute("required") && !input.value) {
             valid = false;
           }
         }
@@ -181,13 +184,10 @@
     }
 
     document.getElementById("emailtype").addEventListener("change", toggleVelden);
+    document.getElementById("merk").addEventListener("change", validateForm);
+    document.getElementById("model").addEventListener("input", validateForm);
     document.querySelectorAll("input, select").forEach(el => el.addEventListener("input", validateForm));
     window.addEventListener("DOMContentLoaded", toggleVelden);
   </script>
-
-  <script>
-    document.getElementById("generateBtn").addEventListener("click", genereerEmail);
-  </script>
 </body>
-
 </html>
