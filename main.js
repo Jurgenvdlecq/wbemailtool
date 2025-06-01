@@ -7,8 +7,14 @@ function genereerEmail() {
   const model = document.getElementById("model").value;
   const type = document.getElementById("emailtype").value;
 
-  const aanspreking = (aanhef === "voornaam") ? `Beste ${voornaam},` :
-                      `Beste ${achternaam},`;
+  let aanspreking = "";
+  if (aanhef === "voornaam") {
+    aanspreking = `Beste ${voornaam},`;
+  } else if (aanhef === "heer") {
+    aanspreking = `Beste heer ${achternaam},`;
+  } else if (aanhef === "mevrouw") {
+    aanspreking = `Beste mevrouw ${achternaam},`;
+  }
 
   const prijs = document.getElementById("prijs")?.value || "";
   const levertijd = document.getElementById("levertijd")?.value || "";
