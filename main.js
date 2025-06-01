@@ -75,11 +75,20 @@ function genereerEmail() {
     tekst += `Heeft u nog vragen of opmerkingen? Ik hoor het graag.`;
   }
 
-  tekst += `\n\nMet vriendelijke groet,\nWittebrug SEAT`;
+  
+  if (type === "followup") {
+    tekst += `Beste heer ${achternaam},\n\n`;
+    tekst += `Enige tijd geleden ontving u van mij de offerte voor de ${model}.\n`;
+    tekst += `Ik wilde even navragen of alles duidelijk is en of u nog vragen heeft over de offerte of de uitvoering.\n\n`;
+    tekst += `Uiteraard sta ik voor u klaar om eventuele onderdelen van de offerte toe te lichten of alternatieve opties te bespreken.`;
+  }
+
+tekst += `\n\nMet vriendelijke groet,\nWittebrug SEAT`;
 
   document.getElementById("output").textContent = tekst;
 
   const onderwerp = {
+    followup: `Follow-up offerte – ${model}`,
     offerte: `Offerteaanvraag – SEAT ${model}`,
     inruil: `Offerte SEAT ${model} inclusief inruilvoorstel`,
     proefrit: `Bevestiging proefrit – SEAT ${model}`,
