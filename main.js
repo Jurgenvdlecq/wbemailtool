@@ -1,4 +1,3 @@
-
 function genereerEmail() {
   const aanhef = document.getElementById("aanhef").value;
   const voornaam = document.getElementById("voornaam").value;
@@ -27,8 +26,22 @@ function genereerEmail() {
   const eigenrisico = document.getElementById("eigenrisico")?.value || "";
   const maandbedrag = document.getElementById("maandbedrag")?.value || "";
   const banden = document.getElementById("banden")?.value || "";
+  const leverdatum = document.getElementById("leverdatum")?.value;
 
-  const datumFormatted = datum ? new Date(datum).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }) : "";
+  const datumFormatted = datum
+    ? new Date(datum).toLocaleDateString("nl-NL", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+  const leverdatumFormatted = leverdatum
+    ? new Date(leverdatum).toLocaleDateString("nl-NL", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
 
   let tekst = `${aanspreking}\n\n`;
 
@@ -46,10 +59,10 @@ function genereerEmail() {
     tekst += `De totale aanschafprijs bedraagt €${prijs}, inclusief afleverkosten.\n`;
     tekst += `De inruilwaarde van uw huidige auto bedraagt €${inruilprijs}.\n`;
     tekst += `De verwachte levertijd is ongeveer ${levertijd} na akkoord.\n\n`;
-    tekst += `In de bijlage vindt u:\n`;
-    tekst += `1. De offerte voor de ${merk} ${model} met specificaties en prijsdetails.\n`;
-    tekst += `2. De taxatie van uw huidige auto, inclusief het inruilbedrag.\n`;
-    tekst += `3. Optioneel: financierings- of leaseopties (indien van toepassing).\n\n`;
+    tekst += `In de bijlage vindt u:` + 
+             `\n1. De offerte voor de ${merk} ${model} met specificaties en prijsdetails.` +
+             `\n2. De taxatie van uw huidige auto, inclusief het inruilbedrag.` +
+             `\n3. Optioneel: financierings- of leaseopties (indien van toepassing).\n\n`;
     tekst += `Graag nodig ik u uit voor een definitieve taxatie in onze showroom, zodat we het inruilbedrag definitief kunnen vaststellen.`;
   }
 
@@ -59,9 +72,9 @@ function genereerEmail() {
     tekst += `• Model: ${merk} ${model}\n• Maandbedrag: €${maandbedrag} per maand\n• Looptijd: ${looptijd} maanden\n`;
     tekst += `• Kilometrage: ${kilometers} km per jaar\n• Type banden: ${banden}\n• Eigen risico: €${eigenrisico}\n`;
     tekst += `• Inclusief: Wegenbelasting, onderhoud, reparaties en allriskverzekering\n\n`;
-    tekst += `Vervolgstappen:\n`;
-    tekst += `1. Reageer positief op deze e-mail wanneer u de private lease-aanvraag wilt starten.\n`;
-    tekst += `2. U ontvangt dan een e-mail van Volkswagen Pon Financial Services (VWPFS) om de krediettoetsing te doorlopen.\n\n`;
+    tekst += `Vervolgstappen:` +
+             `\n1. Reageer positief op deze e-mail wanneer u de private lease-aanvraag wilt starten.` +
+             `\n2. U ontvangt dan een e-mail van Volkswagen Pon Financial Services (VWPFS) om de krediettoetsing te doorlopen.\n\n`;
     tekst += `Laat me weten wat u ervan vindt of als u vragen heeft; ik help u graag verder!`;
   }
 
@@ -87,20 +100,17 @@ function genereerEmail() {
     tekst += `Heeft u nog vragen of opmerkingen? Laat het gerust weten; ik help u graag verder.`;
   }
 
-  
+  if (type === "followup") {
+    tekst += `Enige tijd geleden ontving u van mij de offerte voor de ${merk} ${model}.\n\n`;
+    tekst += `Ik hoor graag wat u ervan vindt en of u nog vragen heeft over de offerte of de uitvoering.\n\n`;
+    tekst += `Uiteraard sta ik voor u klaar om eventuele onderdelen van de offerte toe te lichten of alternatieve opties te bespreken.`;
+  }
+
   if (type === "status") {
-    const leverdatum = document.getElementById("leverdatum")?.value;
-    const leverdatumFormatted = leverdatum ? new Date(leverdatum).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }) : "";
     tekst += `Wij hebben voor u de ${merk} ${model} in bestelling staan en willen u graag op de hoogte houden van de status van deze bestelling.\n\n`;
     tekst += `We verwachten dat wij de auto rond ${leverdatumFormatted} kunnen leveren. Op dit moment is dit nog niet definitief, dus dit kan nog wijzigen.\n\n`;
     tekst += `Mocht dit wijzigen, dan laten wij het uiteraard aan u weten.\n\n`;
     tekst += `Mocht u nog vragen hebben, neem dan gerust contact met ons op.`;
-  }
-
-  if (type === "followup") {
-    tekst += `Enige tijd geleden ontving u van mij de offerte voor de ${merk} ${model}.\n`;
-    tekst += `Ik hoor graag wat u ervan vindt en of u nog vragen heeft over de offerte of de uitvoering.\n\n`;
-    tekst += `Uiteraard sta ik voor u klaar om eventuele onderdelen van de offerte toe te lichten of alternatieve opties te bespreken.`;
   }
 
   document.getElementById("output").textContent = tekst;
@@ -126,7 +136,7 @@ function genereerEmail() {
 
   const feedback = document.getElementById("feedback");
   feedback.textContent = "✅ E-mailtekst is gegenereerd!";
-  setTimeout(() => feedback.textContent = "", 3000);
+  setTimeout(() => (feedback.textContent = ""), 3000);
 }
 
 function kopieerTekst() {
