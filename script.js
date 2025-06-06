@@ -1,7 +1,32 @@
-// Wittebrug E-mailgenerator (v12)
+// Wittebrug E-mailgenerator (v13)
 
 const seatModels = ["Ibiza", "Leon", "Leon Sportstourer", "Arona", "Ateca"];
 const cupraModels = ["Born", "Formentor", "Leon", "Leon Sportstourer", "Terramar", "Tavascan"];
+
+// Translate Dutch durations like "2 weken" to English "2 weeks"
+function translateDuration(text) {
+  if (!text) return '';
+  const mappings = [
+    { nl: 'weken', en: 'weeks' },
+    { nl: 'week',  en: 'week' },
+    { nl: 'dagen', en: 'days' },
+    { nl: 'dag',   en: 'day' },
+    { nl: 'maanden', en: 'months' },
+    { nl: 'maand', en: 'month' }
+  ];
+  let result = text;
+  mappings.forEach(m => {
+    const re = new RegExp('\\b(\\d+)\\s*' + m.nl + '\\b', 'gi');
+    result = result.replace(re, '$1 ' + m.en);
+  });
+  return result;
+}
+
+function formatPriceNL(num) {
+  // Format number to Dutch format "23.950"
+  const formatted = new Intl.NumberFormat('nl-NL').format(num);
+  return '€ ' + formatted + ',-';
+}
 
 function populateModels() {
   const merk = document.getElementById('merk').value;
@@ -37,16 +62,14 @@ function validateField(id) {
     return false;
   } else {
     field.classList.remove('error');
-    if (error) {
-      error.style.display = 'none';
-    }
+    if (error) error.style.display = 'none';
     return true;
   }
 }
 
 function validateForm() {
   let valid = true;
-  ['aanhef', 'merk', 'model', 'emailtype'].forEach(id => {
+  ['aanhef', 'merk', 'model', 'emailtype', 'voornaam', 'achternaam'].forEach(id => {
     if (!validateField(id)) valid = false;
   });
   document.querySelectorAll('.field-group').forEach(group => {
@@ -87,11 +110,18 @@ function toggleFields() {
   validateForm();
 }
 
+// Add real-time validation on blur
+['aanhef','voornaam','achternaam','merk','model','emailtype','prijs','levertijd','datum','tijd','looptijd','kilometers'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('blur', () => validateField(id));
+  }
+});
+
 let currentLang = 'nl';
 
 function updateLanguage() {
   currentLang = document.getElementById('languageSelect').value;
-  // labels remain in Dutch; only regenerate email outputs
   if (!document.getElementById('copyBtn').disabled) {
     generateEmail();
   }
@@ -118,13 +148,29 @@ function generateEmail() {
     aanspreking = currentLang === 'nl' ? `Beste mevrouw ${achternaam},` : `Dear Ms. ${achternaam},`;
   }
 
-  const prijs = document.getElementById('prijs').value.trim();
-  const levertijd = document.getElementById('levertijd').value.trim();
+  let prijsVal = document.getElementById('prijs').value.trim();
+  let prijsText = '';
+  if (prijsVal && currentLang === 'nl') {
+    prijsText = `<strong>${formatPriceNL(prijsVal)}</strong>`;
+  } else if (prijsVal) {
+    prijsText = `<strong>${formatPriceNL(prijsVal)}</strong>`;
+  }
+
+  let levertijd = document.getElementById('levertijd').value.trim();
+  let levertijdText = (currentLang === 'en') ? translateDuration(levertijd) : levertijd;
+
   const inruilprijs = document.getElementById('inruilprijs').value.trim();
+  let inruilText = '';
+  if (inruilprijs && currentLang === 'nl') {
+    inruilText = `<strong>${formatPriceNL(inruilprijs)}</strong>`;
+  } else if (inruilprijs) {
+    inruilText = `<strong>${formatPriceNL(inruilprijs)}</strong>`;
+  }
+
   const kenteken = document.getElementById('kenteken').value.trim();
   const datum = document.getElementById('datum').value;
   const tijd = document.getElementById('tijd').value;
-  const looptijd = document.getElementById('looptijd').value.trim();
+  let looptijd = document.getElementById('looptijd').value.trim();
   const kilometers = document.getElementById('kilometers').value.trim();
   const eigenrisico = document.getElementById('eigenrisico').value.trim();
   const maandbedrag = document.getElementById('maandbedrag').value.trim();
@@ -134,282 +180,174 @@ function generateEmail() {
   const datumFormatted = datum ? new Date(datum).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
   const leverdatumFormatted = leverdatum ? new Date(leverdatum).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
 
-  let tekst = `${aanspreking}
+  let tekstHTML = `<p>${aanspreking}</p>`;
 
-`;
-
+  // Offerte zonder inruil
   if (type === 'offerte') {
     if (currentLang === 'nl') {
-      tekst += `Hartelijk dank voor uw interesse in de ${merk} ${model}.
-
-`;
-      tekst += `De totale aanschafprijs bedraagt €${prijs}, inclusief afleverkosten.
-`;
-      tekst += `De verwachte levertijd is ongeveer ${levertijd} na akkoord.
-
-`;
-      tekst += `In de bijlage vindt u de complete offerte.
-
-`;
-      tekst += `Uiteraard bent u van harte welkom om de auto in het echt te bekijken of een proefrit te maken.`;
+      tekstHTML += `<p>Hartelijk dank voor uw interesse in de ${merk} ${model}.</p>`;
+      tekstHTML += `<p>De totale aanschafprijs bedraagt ${prijsText}, inclusief afleverkosten.<br>
+      De verwachte levertijd is ongeveer <strong>${levertijdText}</strong> na akkoord.</p>`;
+      tekstHTML += `<p>In de bijlage vindt u de complete offerte.</p>`;
+      tekstHTML += `<p>Uiteraard bent u van harte welkom om de auto in het echt te bekijken of een proefrit te maken.</p>`;
     } else {
-      tekst += `Thank you for your interest in the ${merk} ${model}.
-
-`;
-      tekst += `The total purchase price is €${prijs}, including delivery costs.
-`;
-      tekst += `The expected delivery time is approximately ${levertijd} after approval.
-
-`;
-      tekst += `You will find the full quote attached.
-
-`;
-      tekst += `Of course, you are very welcome to come and see the car in person or schedule a test drive.`;
+      tekstHTML += `<p>Thank you for your interest in the ${merk} ${model}.</p>`;
+      tekstHTML += `<p>The total purchase price is ${prijsText}, including delivery costs.<br>
+      The expected delivery time is approximately <strong>${levertijdText}</strong> after approval.</p>`;
+      tekstHTML += `<p>You will find the full quote attached.</p>`;
+      tekstHTML += `<p>Of course, you are very welcome to come and see the car in person or schedule a test drive.</p>`;
     }
   }
 
+  // Offerte met inruil
   if (type === 'inruil') {
     if (currentLang === 'nl') {
-      tekst += `Hartelijk dank voor uw interesse in de ${merk} ${model}.
-
-`;
-      tekst += `Zoals besproken stuur ik u hierbij de offerte, inclusief de definitieve inruilwaarde voor uw huidige auto (kenteken ${kenteken}).
-
-`;
-      tekst += `De totale aanschafprijs bedraagt €${prijs}, inclusief afleverkosten.
-`;
-      tekst += `De inruilwaarde van uw huidige auto bedraagt €${inruilprijs}.
-`;
-      tekst += `De verwachte levertijd is ongeveer ${levertijd} na akkoord.
-
-`;
-      tekst += `In de bijlage vindt u:
-`;
-      tekst += `1. De offerte voor de ${merk} ${model} met specificaties en prijsdetails.
-`;
-      tekst += `2. De taxatie van uw huidige auto, inclusief het inruilbedrag.
-`;
-      tekst += `3. Optioneel: financierings- of leaseopties (indien van toepassing).
-
-`;
-      tekst += `Graag nodig ik u uit voor een definitieve taxatie in onze showroom, zodat we het inruilbedrag definitief kunnen vaststellen.`;
+      tekstHTML += `<p>Hartelijk dank voor uw interesse in de ${merk} ${model}.</p>`;
+      tekstHTML += `<p>Zoals besproken stuur ik u hierbij de offerte, inclusief de definitieve inruilwaarde voor uw huidige auto (kenteken <strong>${kenteken}</strong>).</p>`;
+      tekstHTML += `<p>De totale aanschafprijs bedraagt ${prijsText}, inclusief afleverkosten.<br>
+      De inruilwaarde van uw huidige auto bedraagt ${inruilText}.<br>
+      De verwachte levertijd is ongeveer <strong>${levertijdText}</strong> na akkoord.</p>`;
+      tekstHTML += `<p>In de bijlage vindt u:<br>
+      1. De offerte voor de ${merk} ${model} met specificaties en prijsdetails.<br>
+      2. De taxatie van uw huidige auto, inclusief het inruilbedrag.<br>
+      3. Optioneel: financierings- of leaseopties (indien van toepassing).</p>`;
+      tekstHTML += `<p>Graag nodig ik u uit voor een definitieve taxatie in onze showroom, zodat we het inruilbedrag definitief kunnen vaststellen.</p>`;
     } else {
-      tekst += `Thank you for your interest in the ${merk} ${model}.
-
-`;
-      tekst += `As discussed, I am sending you the quote, including the confirmed trade-in value for your current car (license plate ${kenteken}).
-
-`;
-      tekst += `The total purchase price is €${prijs}, including delivery costs.
-`;
-      tekst += `The trade-in value of your current car is €${inruilprijs}.
-`;
-      tekst += `The expected delivery time is approximately ${levertijd} after approval.
-
-`;
-      tekst += `Attached you will find:
-`;
-      tekst += `1. The quote for the ${merk} ${model} with specifications and pricing details.
-`;
-      tekst += `2. The appraisal of your current car, including the trade-in amount.
-`;
-      tekst += `3. Optional: financing or leasing options (if applicable).
-
-`;
-      tekst += `You are kindly invited for a final appraisal in our showroom so that we can confirm the trade-in amount.`;
+      tekstHTML += `<p>Thank you for your interest in the ${merk} ${model}.</p>`;
+      tekstHTML += `<p>As discussed, I am sending you the quote, including the confirmed trade-in value for your current car (license plate <strong>${kenteken}</strong>).</p>`;
+      tekstHTML += `<p>The total purchase price is ${prijsText}, including delivery costs.<br>
+      The trade-in value of your current car is ${inruilText}.<br>
+      The expected delivery time is approximately <strong>${levertijdText}</strong> after approval.</p>`;
+      tekstHTML += `<p>Attached you will find:<br>
+      1. The quote for the ${merk} ${model} with specifications and pricing details.<br>
+      2. The appraisal of your current car, including the trade-in amount.<br>
+      3. Optional: financing or leasing options (if applicable).</p>`;
+      tekstHTML += `<p>You are kindly invited for a final appraisal in our showroom so that we can confirm the trade-in amount.</p>`;
     }
   }
 
+  // Private lease
   if (type === 'lease') {
     if (currentLang === 'nl') {
-      tekst += `Hartelijk dank voor uw interesse in de ${merk} ${model}.
-
-`;
-      tekst += `Zoals beloofd stuur ik hierbij ons private leasevoorstel. In deze e-mail vindt u de belangrijkste details:
-`;
-      tekst += `• Model: ${merk} ${model}
-• Looptijd: ${looptijd} maanden
-`;
-      tekst += `• Kilometrage: ${kilometers} km per jaar
-• Type banden: ${banden}
-• Eigen risico: €${eigenrisico}
-`;
-      tekst += `• Inclusief: Wegenbelasting, onderhoud, reparaties en allriskverzekering
-
-`;
-      tekst += `Vervolgstappen:
-`;
-      tekst += `1. Reageer positief op deze e-mail wanneer u de private lease-aanvraag wilt starten.
-`;
-      tekst += `2. U ontvangt dan een e-mail van Volkswagen Pon Financial Services (VWPFS) om de krediettoetsing te doorlopen.
-
-`;
-      tekst += `Laat me weten wat u ervan vindt of als u vragen heeft; ik help u graag verder!`;
+      tekstHTML += `<p>Hartelijk dank voor uw interesse in de ${merk} ${model}.</p>`;
+      tekstHTML += `<p>Zoals beloofd stuur ik hierbij ons private leasevoorstel. In deze e-mail vindt u de belangrijkste details:</p>`;
+      tekstHTML += `<ul>
+        <li>Model: <strong>${merk} ${model}</strong></li>
+        <li>Looptijd: <strong>${looptijd}</strong> maanden</li>
+        <li>Kilometrage: <strong>${kilometers}</strong> km per jaar</li>
+        <li>Type banden: <strong>${banden}</strong></li>
+        <li>Eigen risico: <strong>${formatPriceNL(eigenrisico)}</strong></li>
+        <li>Inclusief: Wegenbelasting, onderhoud, reparaties en allriskverzekering</li>
+      </ul>`;
+      tekstHTML += `<p>Vervolgstappen:<br>
+        1. Reageer positief op deze e-mail wanneer u de private lease-aanvraag wilt starten.<br>
+        2. U ontvangt dan een e-mail van Volkswagen Pon Financial Services (VWPFS) om de krediettoetsing te doorlopen.</p>`;
+      tekstHTML += `<p>Laat me weten wat u ervan vindt of als u vragen heeft; ik help u graag verder!</p>`;
     } else {
-      tekst += `Thank you for your interest in the ${merk} ${model}.
-
-`;
-      tekst += `As promised, I am sending you our private lease proposal. In this email you will find the key details:
-`;
-      tekst += `• Model: ${merk} ${model}
-• Duration: ${looptijd} months
-`;
-      tekst += `• Mileage: ${kilometers} km per year
-• Tire type: ${banden}
-• Deductible: €${eigenrisico}
-`;
-      tekst += `• Included: Road tax, maintenance, repairs, and comprehensive insurance
-
-`;
-      tekst += `Next steps:
-`;
-      tekst += `1. Reply positively to this email if you want to proceed with the private lease application.
-`;
-      tekst += `2. You will then receive an email from Volkswagen Pon Financial Services (VWPFS) to complete the credit check.
-
-`;
-      tekst += `Let me know what you think or if you have any questions; I am happy to help!`;
+      tekstHTML += `<p>Thank you for your interest in the ${merk} ${model}.</p>`;
+      tekstHTML += `<p>As promised, I am sending you our private lease proposal. In this email you will find the key details:</p>`;
+      tekstHTML += `<ul>
+        <li>Model: <strong>${merk} ${model}</strong></li>
+        <li>Duration: <strong>${looptijd}</strong> months</li>
+        <li>Mileage: <strong>${kilometers}</strong> km per year</li>
+        <li>Tire type: <strong>${banden}</strong></li>
+        <li>Deductible: <strong>${formatPriceNL(eigenrisico)}</strong></li>
+        <li>Included: Road tax, maintenance, repairs, and comprehensive insurance</li>
+      </ul>`;
+      tekstHTML += `<p>Next steps:<br>
+        1. Reply positively to this email if you want to proceed with the privatelease application.<br>
+        2. You will then receive an email from Volkswagen Pon Financial Services (VWPFS) to complete the credit check.</p>`;
+      tekstHTML += `<p>Let me know what you think or if you have any questions; I am happy to help!</p>`;
     }
   }
 
+  // Proefritbevestiging
   if (type === 'proefrit') {
     if (currentLang === 'nl') {
-      tekst += `Hartelijk dank voor uw interesse in de ${merk} ${model}.
-
-`;
-      tekst += `Hierbij bevestigen wij graag uw proefritafspraak op ${datumFormatted} om ${tijd} met de ${merk} ${model}.
-
-`;
-      tekst += `Wij ontvangen u bij Wittebrug SEAT, Donau 120, 2491 BC Den Haag. Vergeet alstublieft uw rijbewijs niet mee te nemen.
-
-`;
-      tekst += `Mocht u vooraf nog vragen hebben of iets willen wijzigen, neem gerust contact met ons op.`;
+      tekstHTML += `<p>Hartelijk dank voor uw interesse in de ${merk} ${model}.</p>`;
+      tekstHTML += `<p>Hierbij bevestigen wij graag uw proefritafspraak op <strong>${datumFormatted}</strong> om <strong>${tijd}</strong> met de ${merk} ${model}.</p>`;
+      tekstHTML += `<p>Wij ontvangen u bij Wittebrug SEAT, Donau 120, 2491 BC Den Haag. Vergeet alstublieft uw rijbewijs niet mee te nemen.</p>`;
+      tekstHTML += `<p>Mocht u vooraf nog vragen hebben of iets willen wijzigen, neem gerust contact met ons op.</p>`;
     } else {
-      tekst += `Thank you for your interest in the ${merk} ${model}.
-
-`;
-      tekst += `We are pleased to confirm your test drive appointment on ${datumFormatted} at ${tijd} with the ${merk} ${model}.
-
-`;
-      tekst += `We look forward to welcoming you at Wittebrug SEAT, Donau 120, 2491 BC Den Haag. Please remember to bring your driver’s license.
-
-`;
-      tekst += `If you have any questions or need to make changes, feel free to contact us.`;
+      tekstHTML += `<p>Thank you for your interest in the ${merk} ${model}.</p>`;
+      tekstHTML += `<p>We are pleased to confirm your test drive appointment on <strong>${datumFormatted}</strong> at <strong>${tijd}</strong> with the ${merk} ${model}.</p>`;
+      tekstHTML += `<p>We look forward to welcoming you at Wittebrug SEAT, Donau 120, 2491 BC Den Haag. Please remember to bring your driver’s license.</p>`;
+      tekstHTML += `<p>If you have any questions or need to make changes, feel free to contact us.</p>`;
     }
   }
 
+  // Afspraakbevestiging
   if (type === 'afspraak') {
     if (currentLang === 'nl') {
-      tekst += `Leuk dat we een afspraak hebben gepland voor de ${merk} ${model} op ${datumFormatted} om ${tijd}.
-
-`;
-      tekst += `U bent van harte welkom bij Wittebrug SEAT, Donau 120, 2491 BC Den Haag.
-
-`;
-      tekst += `Heeft u vooraf nog vragen of wilt u de afspraak wijzigen? Laat het gerust weten.`;
+      tekstHTML += `<p>Leuk dat we een afspraak hebben gepland voor de ${merk} ${model} op <strong>${datumFormatted}</strong> om <strong>${tijd}</strong>.</p>`;
+      tekstHTML += `<p>U bent van harte welkom bij Wittebrug SEAT, Donau 120, 2491 BC Den Haag.</p>`;
+      tekstHTML += `<p>Heeft u vooraf nog vragen of wilt u de afspraak wijzigen? Laat het gerust weten.</p>`;
     } else {
-      tekst += `We are glad to have an appointment scheduled for the ${merk} ${model} on ${datumFormatted} at ${tijd}.
-
-`;
-      tekst += `You are welcome at Wittebrug SEAT, Donau 120, 2491 BC Den Haag.
-
-`;
-      tekst += `If you have any questions beforehand or need to modify the appointment, please let us know.`;
+      tekstHTML += `<p>We are glad to have an appointment scheduled for the ${merk} ${model} on <strong>${datumFormatted}</strong> at <strong>${tijd}</strong>.</p>`;
+      tekstHTML += `<p>You are welcome at Wittebrug SEAT, Donau 120, 2491 BC Den Haag.</p>`;
+      tekstHTML += `<p>If you have any questions beforehand or need to modify the appointment, please let us know.</p>`;
     }
   }
 
+  // Showroombezoek
   if (type === 'showroom') {
     if (currentLang === 'nl') {
-      tekst += `Hartelijk dank voor uw bezoek aan onze showroom.
-
-`;
-      tekst += `Zoals besproken ontvangt u hierbij de offerte voor de ${merk} ${model}.
-
-`;
-      tekst += `De totale aanschafprijs bedraagt €${prijs}, inclusief afleverkosten.
-`;
-      tekst += `De verwachte levertijd is ${levertijd}.
-
-`;
-      tekst += `De offerte heb ik als bijlage toegevoegd.
-
-`;
-      tekst += `Heeft u nog vragen of opmerkingen? Laat het gerust weten; ik help u graag verder.`;
+      tekstHTML += `<p>Hartelijk dank voor uw bezoek aan onze showroom.</p>`;
+      tekstHTML += `<p>Zoals besproken ontvangt u hierbij de offerte voor de ${merk} ${model}.</p>`;
+      tekstHTML += `<p>De totale aanschafprijs bedraagt ${prijsText}, inclusief afleverkosten.<br>
+      De verwachte levertijd is <strong>${levertijdText}</strong>.</p>`;
+      tekstHTML += `<p>De offerte heb ik als bijlage toegevoegd.</p>`;
+      tekstHTML += `<p>Heeft u nog vragen of opmerkingen? Laat het gerust weten; ik help u graag verder.</p>`;
     } else {
-      tekst += `Thank you for visiting our showroom.
-
-`;
-      tekst += `As discussed, you will find the quote for the ${merk} ${model} below.
-
-`;
-      tekst += `The total purchase price is €${prijs}, including delivery costs.
-`;
-      tekst += `The expected delivery is ${levertijd}.
-
-`;
-      tekst += `The quote is attached.
-
-`;
-      tekst += `If you have any questions or comments, please let me know; I am happy to help.`;
+      tekstHTML += `<p>Thank you for visiting our showroom.</p>`;
+      tekstHTML += `<p>As discussed, you will find the quote for the ${merk} ${model} below.</p>`;
+      tekstHTML += `<p>The total purchase price is ${prijsText}, including delivery costs.<br>
+      The expected delivery is <strong>${levertijdText}</strong>.</p>`;
+      tekstHTML += `<p>The quote is attached.</p>`;
+      tekstHTML += `<p>If you have any questions or comments, please let me know; I am happy to help.</p>`;
     }
   }
 
+  // Follow-up offerte
   if (type === 'followup') {
     if (currentLang === 'nl') {
-      tekst += `Enige tijd geleden ontving u van mij de offerte voor de ${merk} ${model}.
-`;
-      tekst += `Ik hoor graag wat u ervan vindt en of u nog vragen heeft over de offerte of de uitvoering.
-
-`;
-      tekst += `Uiteraard sta ik voor u klaar om eventuele onderdelen van de offerte toe te lichten of alternatieve opties te bespreken.`;
+      tekstHTML += `<p>Enige tijd geleden ontving u van mij de offerte voor de ${merk} ${model}.</p>`;
+      tekstHTML += `<p>Ik hoor graag wat u ervan vindt en of u nog vragen heeft over de offerte of de uitvoering.</p>`;
+      tekstHTML += `<p>Uiteraard sta ik voor u klaar om eventuele onderdelen van de offerte toe te lichten of alternatieve opties te bespreken.</p>`;
     } else {
-      tekst += `Some time ago, you received the quote for the ${merk} ${model} from me.
-`;
-      tekst += `I would love to hear what you think and if you have any questions about the quote or the specifications.
-
-`;
-      tekst += `Of course, I am available to explain any part of the quote or discuss alternative options.`;
+      tekstHTML += `<p>Some time ago, you received the quote for the ${merk} ${model} from me.</p>`;
+      tekstHTML += `<p>I would love to hear what you think and if you have any questions about the quote or the specifications.</p>`;
+      tekstHTML += `<p>Of course, I am available to explain any part of the quote or discuss alternative options.</p>`;
     }
   }
 
+  // Status levering
   if (type === 'status') {
     if (currentLang === 'nl') {
-      tekst += `Wij hebben voor u de ${merk} ${model} in bestelling staan en willen u graag op de hoogte houden van de status van deze bestelling.
-
-`;  
-      tekst += `We verwachten dat wij de auto rond ${leverdatumFormatted} kunnen leveren. Op dit moment is dit nog niet definitief, dus dit kan nog wijzigen.
-
-`;
-      tekst += `Mocht dit wijzigen, dan laten wij het uiteraard aan u weten.
-
-`;
-      tekst += `Mocht u nog vragen hebben, neem dan gerust contact met ons op.`;
+      tekstHTML += `<p>Wij hebben voor u de ${merk} ${model} in bestelling staan en willen u graag op de hoogte houden van de status van deze bestelling.</p>`;
+      tekstHTML += `<p>We verwachten dat wij de auto rond <strong>${leverdatumFormatted}</strong> kunnen leveren. Op dit moment is dit nog niet definitief, dus dit kan nog wijzigen.</p>`;
+      tekstHTML += `<p>Mocht dit wijzigen, dan laten wij het uiteraard aan u weten.</p>`;
+      tekstHTML += `<p>Mocht u nog vragen hebben, neem dan gerust contact met ons op.</p>`;
     } else {
-      tekst += `We have the ${merk} ${model} on order for you and would like to keep you informed about the status of this order.
-
-`;
-      tekst += `We expect to deliver the car around ${leverdatumFormatted}. At this time, this is not final, so it may still change.
-
-`;
-      tekst += `If this changes, we will of course let you know.
-
-`;
-      tekst += `If you have any further questions, please feel free to contact us.`;
+      tekstHTML += `<p>We have the ${merk} ${model} on order for you and would like to keep you informed about the status of this order.</p>`;
+      tekstHTML += `<p>We expect to deliver the car around <strong>${leverdatumFormatted}</strong>. At this time, this is not final, so it may still change.</p>`;
+      tekstHTML += `<p>If this changes, we will of course let you know.</p>`;
+      tekstHTML += `<p>If you have any further questions, please feel free to contact us.</p>`;
     }
   }
 
-  document.getElementById('previewContent').textContent = tekst;
+  document.getElementById('previewContent').innerHTML = tekstHTML;
   document.getElementById('copyBtn').disabled = false;
 }
 
 function copyEmail() {
-  const tekst = document.getElementById('previewContent').textContent;
+  const tekst = document.getElementById('previewContent').innerText;
   navigator.clipboard.writeText(tekst);
   showToast('E-mailtekst gekopieerd naar klembord');
 }
 
 function resetForm() {
-  document.getElementById('previewContent').textContent = '';
+  document.getElementById('previewContent').innerHTML = '';
   document.getElementById('copyBtn').disabled = true;
 }
 
