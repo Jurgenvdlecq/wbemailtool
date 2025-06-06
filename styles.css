@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 10pt;
@@ -8,12 +12,19 @@ body {
   color: #333;
 }
 
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
 header {
-  background-color: #0033A0; /* Wittebrug blauw */
-  color: white;
-  padding: 10px 20px;
   display: flex;
   align-items: center;
+  background-color: #0033A0;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
 }
 
 header .logo {
@@ -22,20 +33,20 @@ header .logo {
 }
 
 header h1 {
-  font-size: 1.5rem;
   margin: 0;
+  font-size: 1.5rem;
 }
 
 main {
   display: flex;
   flex-wrap: wrap;
-  margin: 20px;
+  margin-top: 20px;
 }
 
 .form-section, .preview-section {
   background: white;
   border-radius: 5px;
-  padding: 15px;
+  padding: 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   margin: 10px;
 }
@@ -45,62 +56,89 @@ main {
 }
 
 .preview-section {
-  flex: 1 1 300px;
-  max-width: 600px;
+  flex: 1 1 400px;
 }
 
-h2 {
-  margin-top: 0;
-  color: #0033A0;
+fieldset.fieldset-group {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
 }
 
-label {
+legend {
+  font-weight: 600;
+  padding: 0 5px;
+}
+
+.field-group {
+  margin-bottom: 12px;
+}
+
+.field-group label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
-input, select {
+.field-group input, .field-group select {
   width: 100%;
-  padding: 6px;
-  margin-top: 4px;
-  box-sizing: border-box;
+  padding: 8px;
   border: 1px solid #ccc;
   border-radius: 3px;
 }
 
-button {
+.field-group input:focus, .field-group select:focus {
+  border-color: #0033A0;
+  outline: none;
+}
+
+.field-group .error-message {
+  color: #D8000C;
+  font-size: 0.8rem;
+  margin-top: 2px;
+  display: none;
+}
+
+.button-row {
+  margin-top: 15px;
+}
+
+.button-row button {
   background-color: #0033A0;
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 10px 20px;
   margin-right: 10px;
   border-radius: 3px;
   cursor: pointer;
   font-size: 1rem;
 }
 
-button:disabled {
+.button-row button:disabled {
   background-color: #999;
   cursor: not-allowed;
 }
 
-.button-group {
-  margin-top: 15px;
-}
-
-#feedback {
-  margin-top: 10px;
-  color: green;
-}
-
-pre {
+#previewContent {
   background: #eef1f4;
-  padding: 10px;
+  padding: 15px;
   border-radius: 3px;
-  min-height: 150px;
+  min-height: 200px;
+  white-space: pre-wrap;
 }
 
-@media (max-width: 600px) {
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #0033A0;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  display: none;
+}
+
+@media (max-width: 800px) {
   main {
     flex-direction: column;
   }
