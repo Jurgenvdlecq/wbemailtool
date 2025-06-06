@@ -12,7 +12,7 @@
       <img src="wittebrug_logo.png" alt="Wittebrug Logo" class="logo"/>
       <h1>E-mailgenerator</h1>
       <div class="language-selection">
-        <label for="languageSelect">Taal / Language:</label>
+        <label for="languageSelect">Taal:</label>
         <select id="languageSelect">
           <option value="nl">Nederlands</option>
           <option value="en">English</option>
@@ -24,45 +24,45 @@
         <form id="emailForm" novalidate>
           <!-- Klantgegevens -->
           <fieldset class="fieldset-group">
-            <legend id="legendKlant">Klantgegevens</legend>
+            <legend>Klantgegevens</legend>
             <div class="field-group">
-              <label for="aanhef" id="labelAanhef">Aanhef</label>
+              <label for="aanhef">Aanhef</label>
               <select id="aanhef" required>
                 <option value="">-- Kies --</option>
-                <option value="heer">De heer / Mr.</option>
-                <option value="mevrouw">Mevrouw / Ms.</option>
-                <option value="voornaam">Voornaam / First name</option>
+                <option value="heer">De heer</option>
+                <option value="mevrouw">Mevrouw</option>
+                <option value="voornaam">Voornaam</option>
               </select>
               <span class="error-message" id="error-aanhef"></span>
             </div>
             <div class="field-group">
-              <label for="voornaam" id="labelVoornaam">Voornaam / First name</label>
-              <input type="text" id="voornaam" placeholder="Bijv. Anna / e.g., Anna"/>
+              <label for="voornaam">Voornaam</label>
+              <input type="text" id="voornaam" placeholder="Bijv. Anna"/>
               <span class="error-message" id="error-voornaam"></span>
             </div>
             <div class="field-group">
-              <label for="achternaam" id="labelAchternaam">Achternaam / Last name</label>
-              <input type="text" id="achternaam" placeholder="Bijv. Janssen / e.g., Smith"/>
+              <label for="achternaam">Achternaam</label>
+              <input type="text" id="achternaam" placeholder="Bijv. Janssen"/>
               <span class="error-message" id="error-achternaam"></span>
             </div>
           </fieldset>
 
           <!-- Merk en Model -->
           <fieldset class="fieldset-group">
-            <legend id="legendBrand">Merk en Model / Brand and Model</legend>
+            <legend>Merk en Model</legend>
             <div class="field-group">
-              <label for="merk" id="labelMerk">Merk / Brand</label>
+              <label for="merk">Merk</label>
               <select id="merk" required>
-                <option value="">-- Kies / Select --</option>
+                <option value="">-- Kies --</option>
                 <option value="SEAT">SEAT</option>
                 <option value="CUPRA">CUPRA</option>
               </select>
               <span class="error-message" id="error-merk"></span>
             </div>
             <div class="field-group">
-              <label for="model" id="labelModel">Model / Model</label>
+              <label for="model">Model</label>
               <select id="model" required>
-                <option value="">-- Kies / Select --</option>
+                <option value="">-- Kies --</option>
               </select>
               <span class="error-message" id="error-model"></span>
             </div>
@@ -70,19 +70,19 @@
 
           <!-- Type e-mail -->
           <fieldset class="fieldset-group">
-            <legend id="legendTypeEmail">Type e-mail / Email type</legend>
+            <legend>Type e-mail</legend>
             <div class="field-group">
-              <label for="emailtype" id="labelEmailType">Type e-mail</label>
+              <label for="emailtype">Type e-mail</label>
               <select id="emailtype" required>
-                <option value="">-- Kies / Select --</option>
-                <option value="offerte">Offerte zonder inruil / Quote without trade-in</option>
-                <option value="inruil">Offerte met inruil / Quote with trade-in</option>
-                <option value="proefrit">Proefritbevestiging / Test drive confirmation</option>
-                <option value="afspraak">Afspraakbevestiging / Appointment confirmation</option>
-                <option value="showroom">Showroombezoek / Showroom visit quote</option>
-                <option value="lease">Private lease / Private lease</option>
-                <option value="followup">Follow-up offerte / Follow-up quote</option>
-                <option value="status">Status levering / Delivery status</option>
+                <option value="">-- Kies --</option>
+                <option value="offerte">Offerte zonder inruil</option>
+                <option value="inruil">Offerte met inruil</option>
+                <option value="proefrit">Proefritbevestiging</option>
+                <option value="afspraak">Afspraakbevestiging</option>
+                <option value="showroom">Showroombezoek</option>
+                <option value="lease">Private lease</option>
+                <option value="followup">Follow-up offerte</option>
+                <option value="status">Status levering</option>
               </select>
               <span class="error-message" id="error-emailtype"></span>
             </div>
@@ -90,88 +90,88 @@
 
           <!-- Specifieke gegevens -->
           <fieldset class="fieldset-group">
-            <legend id="legendSpecifiek">Specifieke gegevens / Specific details</legend>
+            <legend>Specifieke gegevens</legend>
 
             <!-- Prijs (wordt verborgen bij Lease) -->
             <div class="field-group" id="veld-prijs">
-              <label for="prijs" id="labelPrijs">Totale aanschafprijs (€) / Total purchase price (€)</label>
-              <input type="number" id="prijs" min="0" step="0.01" placeholder="Bijv. 23950 / e.g., 23950"/>
+              <label for="prijs">Totale aanschafprijs (€)</label>
+              <input type="number" id="prijs" min="0" step="0.01" placeholder="Bijv. 23950"/>
               <span class="error-message" id="error-prijs"></span>
             </div>
 
             <!-- Levertijd -->
             <div class="field-group" id="veld-levertijd">
-              <label for="levertijd" id="labelLevertijd">Verwachte levertijd / Expected delivery</label>
-              <input type="text" id="levertijd" placeholder="Bijv. 2 weken / e.g., 2 weeks"/>
+              <label for="levertijd">Verwachte levertijd</label>
+              <input type="text" id="levertijd" placeholder="Bijv. 2 weken"/>
               <span class="error-message" id="error-levertijd"></span>
             </div>
 
             <!-- Inruilprijs -->
             <div class="field-group" id="veld-inruilprijs">
-              <label for="inruilprijs" id="labelInruilprijs">Inruilprijs (€) / Trade-in value (€)</label>
-              <input type="number" id="inruilprijs" min="0" step="0.01" placeholder="Bijv. 5000 / e.g., 5000"/>
+              <label for="inruilprijs">Inruilprijs (€)</label>
+              <input type="number" id="inruilprijs" min="0" step="0.01" placeholder="Bijv. 5000"/>
             </div>
 
             <!-- Kenteken inruilauto -->
             <div class="field-group" id="veld-kenteken">
-              <label for="kenteken" id="labelKenteken">Kenteken inruilauto / Trade-in license plate</label>
-              <input type="text" id="kenteken" placeholder="Bijv. AB-123-CD / e.g., AB-123-CD"/>
+              <label for="kenteken">Kenteken inruilauto</label>
+              <input type="text" id="kenteken" placeholder="Bijv. AB-123-CD"/>
             </div>
 
             <!-- Datum -->
             <div class="field-group" id="veld-datum">
-              <label for="datum" id="labelDatum">Datum afspraak/proefrit / Date appointment/test drive</label>
+              <label for="datum">Datum afspraak/proefrit</label>
               <input type="date" id="datum"/>
               <span class="error-message" id="error-datum"></span>
             </div>
 
             <!-- Tijd -->
             <div class="field-group" id="veld-tijd">
-              <label for="tijd" id="labelTijd">Tijd afspraak/proefrit / Time appointment/test drive</label>
+              <label for="tijd">Tijd afspraak/proefrit</label>
               <input type="time" id="tijd"/>
               <span class="error-message" id="error-tijd"></span>
             </div>
 
             <!-- Lease – Looptijd -->
             <div class="field-group" id="veld-looptijd">
-              <label for="looptijd" id="labelLooptijd">Lease – Looptijd (maanden) / Lease – Duration (months)</label>
-              <input type="number" id="looptijd" min="1" placeholder="Bijv. 48 / e.g., 48"/>
+              <label for="looptijd">Lease – Looptijd (maanden)</label>
+              <input type="number" id="looptijd" min="1" placeholder="Bijv. 48"/>
               <span class="error-message" id="error-looptijd"></span>
             </div>
 
             <!-- Kilometers per jaar -->
             <div class="field-group" id="veld-kilometers">
-              <label for="kilometers" id="labelKilometers">Kilometers per jaar / Kilometers per year</label>
-              <input type="number" id="kilometers" min="0" placeholder="Bijv. 15000 / e.g., 15000"/>
+              <label for="kilometers">Kilometers per jaar</label>
+              <input type="number" id="kilometers" min="0" placeholder="Bijv. 15000"/>
               <span class="error-message" id="error-kilometers"></span>
             </div>
 
             <!-- Eigen risico -->
             <div class="field-group" id="veld-eigenrisico">
-              <label for="eigenrisico" id="labelEigenrisico">Eigen risico (€) / Deductible (€)</label>
-              <input type="number" id="eigenrisico" min="0" step="0.01" placeholder="Bijv. 250 / e.g., 250"/>
+              <label for="eigenrisico">Eigen risico (€)</label>
+              <input type="number" id="eigenrisico" min="0" step="0.01" placeholder="Bijv. 250"/>
             </div>
 
             <!-- Maandbedrag -->
             <div class="field-group" id="veld-maandbedrag">
-              <label for="maandbedrag" id="labelMaandbedrag">Maandbedrag (€) / Monthly amount (€)</label>
-              <input type="number" id="maandbedrag" min="0" step="0.01" placeholder="Bijv. 299 / e.g., 299"/>
+              <label for="maandbedrag">Maandbedrag (€)</label>
+              <input type="number" id="maandbedrag" min="0" step="0.01" placeholder="Bijv. 299"/>
             </div>
 
             <!-- Type banden -->
             <div class="field-group" id="veld-banden">
-              <label for="banden" id="labelBanden">Type banden / Tire type</label>
+              <label for="banden">Type banden</label>
               <select id="banden">
-                <option value="">-- Kies / Select --</option>
-                <option value="Zomerbanden">Zomerbanden / Summer tires</option>
-                <option value="Winterbanden">Winterbanden / Winter tires</option>
-                <option value="Allseason banden">Allseason banden / All-season tires</option>
+                <option value="">-- Kies --</option>
+                <option value="Zomerbanden">Zomerbanden</option>
+                <option value="Winterbanden">Winterbanden</option>
+                <option value="Allseason banden">Allseason banden</option>
               </select>
             </div>
 
             <!-- Leverdatum -->
             <div class="field-group" id="veld-leverdatum">
-              <label for="leverdatum" id="labelLeverdatum">Leverdatum / Delivery date</label>
+              <label for="leverdatum">Leverdatum</label>
               <input type="date" id="leverdatum"/>
               <span class="error-message" id="error-leverdatum"></span>
             </div>
@@ -179,8 +179,8 @@
 
           <!-- Knoppen en toast -->
           <div class="button-row">
-            <button type="button" id="generateBtn" disabled>Genereer e-mail / Generate email</button>
-            <button type="button" id="copyBtn" disabled>Kopieer naar klembord / Copy to clipboard</button>
+            <button type="button" id="generateBtn" disabled>Genereer e-mail</button>
+            <button type="button" id="copyBtn" disabled>Kopieer naar klembord</button>
             <button type="reset" id="resetBtn">Reset</button>
           </div>
           <div id="toast" class="toast"></div>
@@ -188,7 +188,7 @@
       </section>
 
       <section class="preview-section">
-        <h2 id="previewHeading">Preview / Voorbeeld</h2>
+        <h2>Preview</h2>
         <pre id="previewContent"></pre>
       </section>
     </main>

@@ -1,4 +1,4 @@
-// Wittebrug E-mailgenerator (v11)
+// Wittebrug E-mailgenerator (v12)
 
 const seatModels = ["Ibiza", "Leon", "Leon Sportstourer", "Arona", "Ateca"];
 const cupraModels = ["Born", "Formentor", "Leon", "Leon Sportstourer", "Terramar", "Tavascan"];
@@ -6,7 +6,7 @@ const cupraModels = ["Born", "Formentor", "Leon", "Leon Sportstourer", "Terramar
 function populateModels() {
   const merk = document.getElementById('merk').value;
   const modelSelect = document.getElementById('model');
-  modelSelect.innerHTML = '<option value="">-- Kies / Select --</option>';
+  modelSelect.innerHTML = '<option value="">-- Kies --</option>';
   let list = [];
   if (merk === 'SEAT') list = seatModels;
   if (merk === 'CUPRA') list = cupraModels;
@@ -32,7 +32,7 @@ function validateField(id) {
   const error = document.getElementById('error-' + id);
   if (field.hasAttribute('required') && !field.value.trim()) {
     field.classList.add('error');
-    error.textContent = currentLang === 'nl' ? 'Dit veld is verplicht' : 'This field is required';
+    error.textContent = 'Dit veld is verplicht';
     error.style.display = 'block';
     return false;
   } else {
@@ -91,34 +91,7 @@ let currentLang = 'nl';
 
 function updateLanguage() {
   currentLang = document.getElementById('languageSelect').value;
-  document.getElementById('legendKlant').textContent = (currentLang === 'nl' ? 'Klantgegevens' : 'Customer details');
-  document.getElementById('labelAanhef').textContent = (currentLang === 'nl' ? 'Aanhef' : 'Salutation');
-  document.getElementById('labelVoornaam').textContent = (currentLang === 'nl' ? 'Voornaam' : 'First name');
-  document.getElementById('labelAchternaam').textContent = (currentLang === 'nl' ? 'Achternaam' : 'Last name');
-  document.getElementById('legendBrand').textContent = (currentLang === 'nl' ? 'Merk en Model' : 'Brand and Model');
-  document.getElementById('labelMerk').textContent = (currentLang === 'nl' ? 'Merk' : 'Brand');
-  document.getElementById('labelModel').textContent = (currentLang === 'nl' ? 'Model' : 'Model');
-  document.getElementById('legendTypeEmail').textContent = (currentLang === 'nl' ? 'Type e-mail' : 'Email type');
-  document.getElementById('labelEmailType').textContent = (currentLang === 'nl' ? 'Type e-mail' : 'Email type');
-  document.getElementById('legendSpecifiek').textContent = (currentLang === 'nl' ? 'Specifieke gegevens' : 'Specific details');
-  document.getElementById('labelPrijs').textContent = (currentLang === 'nl' ? 'Totale aanschafprijs (€)' : 'Total purchase price (€)');
-  document.getElementById('labelLevertijd').textContent = (currentLang === 'nl' ? 'Verwachte levertijd' : 'Expected delivery');
-  document.getElementById('labelInruilprijs').textContent = (currentLang === 'nl' ? 'Inruilprijs (€)' : 'Trade-in value (€)');
-  document.getElementById('labelKenteken').textContent = (currentLang === 'nl' ? 'Kenteken inruilauto' : 'Trade-in license plate');
-  document.getElementById('labelDatum').textContent = (currentLang === 'nl' ? 'Datum afspraak/proefrit' : 'Date appointment/test drive');
-  document.getElementById('labelTijd').textContent = (currentLang === 'nl' ? 'Tijd afspraak/proefrit' : 'Time appointment/test drive');
-  document.getElementById('labelLooptijd').textContent = (currentLang === 'nl' ? 'Lease – Looptijd (maanden)' : 'Lease – Duration (months)');
-  document.getElementById('labelKilometers').textContent = (currentLang === 'nl' ? 'Kilometers per jaar' : 'Kilometers per year');
-  document.getElementById('labelEigenrisico').textContent = (currentLang === 'nl' ? 'Eigen risico (€)' : 'Deductible (€)');
-  document.getElementById('labelMaandbedrag').textContent = (currentLang === 'nl' ? 'Maandbedrag (€)' : 'Monthly amount (€)');
-  document.getElementById('labelBanden').textContent = (currentLang === 'nl' ? 'Type banden' : 'Tire type');
-  document.getElementById('labelLeverdatum').textContent = (currentLang === 'nl' ? 'Leverdatum' : 'Delivery date');
-  document.getElementById('previewHeading').textContent = (currentLang === 'nl' ? 'Preview / Voorbeeld' : 'Preview');
-
-  document.getElementById('generateBtn').textContent = (currentLang === 'nl' ? 'Genereer e-mail' : 'Generate email');
-  document.getElementById('copyBtn').textContent = (currentLang === 'nl' ? 'Kopieer naar klembord' : 'Copy to clipboard');
-  document.getElementById('resetBtn').textContent = (currentLang === 'nl' ? 'Reset' : 'Reset');
-
+  // labels remain in Dutch; only regenerate email outputs
   if (!document.getElementById('copyBtn').disabled) {
     generateEmail();
   }
@@ -126,7 +99,7 @@ function updateLanguage() {
 
 function generateEmail() {
   if (!validateForm()) {
-    showToast(currentLang === 'nl' ? 'Vul eerst alle verplichte velden in.' : 'Please fill in all required fields first.');
+    showToast('Vul eerst alle verplichte velden in.');
     return;
   }
   const aanhef = document.getElementById('aanhef').value;
@@ -158,12 +131,8 @@ function generateEmail() {
   const banden = document.getElementById('banden').value;
   const leverdatum = document.getElementById('leverdatum').value;
 
-  const datumFormatted = datum
-    ? new Date(datum).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })
-    : '';
-  const leverdatumFormatted = leverdatum
-    ? new Date(leverdatum).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })
-    : '';
+  const datumFormatted = datum ? new Date(datum).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+  const leverdatumFormatted = leverdatum ? new Date(leverdatum).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
 
   let tekst = `${aanspreking}
 
@@ -436,7 +405,7 @@ function generateEmail() {
 function copyEmail() {
   const tekst = document.getElementById('previewContent').textContent;
   navigator.clipboard.writeText(tekst);
-  showToast(currentLang === 'nl' ? 'E-mailtekst gekopieerd naar klembord' : 'Email content copied to clipboard');
+  showToast('E-mailtekst gekopieerd naar klembord');
 }
 
 function resetForm() {
