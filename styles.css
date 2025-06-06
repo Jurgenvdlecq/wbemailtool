@@ -21,6 +21,7 @@ body {
 header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background-color: #0033A0;
   color: white;
   padding: 10px 20px;
@@ -35,6 +36,15 @@ header .logo {
 header h1 {
   margin: 0;
   font-size: 1.5rem;
+}
+
+.language-selection {
+  display: flex;
+  align-items: center;
+}
+
+.language-selection label {
+  margin-right: 5px;
 }
 
 main {
@@ -92,11 +102,15 @@ legend {
   outline: none;
 }
 
-.field-group .error-message {
+.error-message {
   color: #D8000C;
   font-size: 0.8rem;
   margin-top: 2px;
   display: none;
+}
+
+.error {
+  border-color: #D8000C;
 }
 
 .button-row {
