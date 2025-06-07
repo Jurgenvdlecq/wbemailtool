@@ -93,7 +93,7 @@
             <legend>Specifieke gegevens</legend>
             <div class="field-group" id="veld-prijs">
               <label for="prijs">Totale aanschafprijs (€) ℹ️</label>
-              <input type="number" id="prijs" min="0" step="0.01" placeholder="23950"/>
+              <input type="number" id="prijs" min="0" placeholder="23950"/>
               <span class="error-message" id="error-prijs"></span>
             </div>
             <div class="field-group" id="veld-levertijd">
@@ -103,7 +103,7 @@
             </div>
             <div class="field-group" id="veld-inruilprijs">
               <label for="inruilprijs">Inruilprijs (€) ℹ️</label>
-              <input type="number" id="inruilprijs" min="0" step="0.01" placeholder="5000"/>
+              <input type="number" id="inruilprijs" min="0" placeholder="5000"/>
             </div>
             <div class="field-group" id="veld-kenteken">
               <label for="kenteken">Kenteken inruilauto ℹ️</label>
@@ -112,30 +112,22 @@
             <div class="field-group" id="veld-datum">
               <label for="datum">Datum afspraak/proefrit ℹ️</label>
               <input type="date" id="datum"/>
-              <span class="error-message" id="error-datum"></span>
             </div>
             <div class="field-group" id="veld-tijd">
               <label for="tijd">Tijd afspraak/proefrit ℹ️</label>
               <input type="time" id="tijd"/>
-              <span class="error-message" id="error-tijd"></span>
-            </div>
-            <div class="field-group" id="veld-looptijd">
-              <label for="looptijd">Lease – Looptijd (maanden) ℹ️</label>
-              <input type="number" id="looptijd" min="1" placeholder="48"/>
-              <span class="error-message" id="error-looptijd"></span>
             </div>
             <div class="field-group" id="veld-kilometers">
               <label for="kilometers">Kilometers per jaar ℹ️</label>
               <input type="number" id="kilometers" min="0" placeholder="15000"/>
-              <span class="error-message" id="error-kilometers"></span>
             </div>
             <div class="field-group" id="veld-eigenrisico">
               <label for="eigenrisico">Eigen risico (€) ℹ️</label>
-              <input type="number" id="eigenrisico" min="0" step="0.01" placeholder="250"/>
+              <input type="number" id="eigenrisico" min="0" placeholder="250"/>
             </div>
             <div class="field-group" id="veld-maandbedrag">
               <label for="maandbedrag">Maandbedrag (€) ℹ️</label>
-              <input type="number" id="maandbedrag" min="0" step="0.01" placeholder="299"/>
+              <input type="number" id="maandbedrag" min="0" placeholder="299"/>
             </div>
             <div class="field-group" id="veld-banden">
               <label for="banden">Type banden ℹ️</label>
@@ -149,10 +141,10 @@
             <div class="field-group" id="veld-leverdatum">
               <label for="leverdatum">Leverdatum ℹ️</label>
               <input type="date" id="leverdatum"/>
-              <span class="error-message" id="error-leverdatum"></span>
             </div>
           </fieldset>
 
+          <!-- Knoppen -->
           <div class="button-row">
             <button type="button" id="generateBtn" disabled>📧 Genereer e-mail</button>
             <button type="button" id="copyBtn" disabled>📋 Kopieer naar klembord</button>
@@ -162,14 +154,12 @@
           <div id="toast" class="toast"></div>
         </form>
       </section>
-
       <section class="preview-section">
         <h2>Preview</h2>
         <div id="previewContent"></div>
       </section>
     </main>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
