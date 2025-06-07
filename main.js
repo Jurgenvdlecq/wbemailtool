@@ -1,6 +1,3 @@
-
-// --- BEGIN GEGENEREERD BESTAND: main.js ---
-
 // Wittebrug E-mailgenerator – main.js (aangepast)
 
 // Modellen
