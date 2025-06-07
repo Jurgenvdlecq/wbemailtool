@@ -1,3 +1,6 @@
+
+// --- BEGIN GEGENEREERD BESTAND: main.js ---
+
 // Wittebrug E-mailgenerator – main.js (aangepast)
 
 // Modellen
@@ -226,3 +229,76 @@ document.getElementById('outlookBtn').addEventListener('click', openInOutlook);
 document.getElementById('resetBtn').addEventListener('click', resetForm);
 document.getElementById('languageSelect').addEventListener('change', updateLanguage);
 window.addEventListener('DOMContentLoaded', ()=>{populateModels();toggleFields();validateForm();updateLanguage();});
+
+
+// Toevoegen of vervangen van de generateEmail functie
+function generateEmail() {
+  if (!validateForm()) {
+    showToast('Vul eerst alle verplichte velden in.');
+    return;
+  }
+
+  const aan = document.getElementById('aanhef').value;
+  const fn = document.getElementById('voornaam').value.trim();
+  const ln = document.getElementById('achternaam').value.trim();
+  const merk = document.getElementById('merk').value;
+  const model = document.getElementById('model').value;
+  const type = document.getElementById('emailtype').value;
+
+  // Aanhef
+  let greet = '';
+  if (aan === 'voornaam') greet = currentLang === 'nl' ? `Beste {fn},` : `Dear {fn},`;
+  else if (aan === 'heer') greet = currentLang === 'nl' ? `Beste heer {ln},` : `Dear Mr. {ln},`;
+  else greet = currentLang === 'nl' ? `Beste mevrouw {ln},` : `Dear Ms. {ln},`;
+
+  // Velden ophalen
+  const data = {
+    merk,
+    model,
+    prijs: formatPriceNL(document.getElementById('prijs')?.value.trim()),
+    levertijd: currentLang === 'en' ? translateDuration(document.getElementById('levertijd')?.value.trim()) : document.getElementById('levertijd')?.value.trim(),
+    inruilprijs: formatPriceNL(document.getElementById('inruilprijs')?.value.trim()),
+    kenteken: document.getElementById('kenteken')?.value.trim(),
+    datum: new Date(document.getElementById('datum')?.value).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
+    tijd: document.getElementById('tijd')?.value,
+    looptijd: document.getElementById('looptijd')?.value,
+    kilometers: document.getElementById('kilometers')?.value,
+    eigenrisico: formatPriceNL(document.getElementById('eigenrisico')?.value),
+    maandbedrag: formatPriceNL(document.getElementById('maandbedrag')?.value),
+    banden: document.getElementById('banden')?.value,
+    leverdatum: new Date(document.getElementById('leverdatum')?.value).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })
+  };
+
+  // Onderwerp
+  const subj = {
+    nl: {
+      offerte: `Offerteaanvraag – {merk} {model}`,
+      inruil: `Offerte {merk} {model} inclusief inruil`,
+      lease: `Private lease {merk} {model}`,
+      proefrit: `Bevestiging proefrit {merk} {model}`,
+      afspraak: `Bevestiging afspraak {merk} {model}`,
+      showroom: `Showroombezoek – Offerte {merk} {model}`,
+      followup: `Follow-up offerte {merk} {model}`,
+      status: `Status levering {merk} {model}`
+    },
+    en: {
+      offerte: `Quote request – {merk} {model}`,
+      inruil: `Quote including trade-in – {merk} {model}`,
+      lease: `Private lease proposal – {merk} {model}`,
+      proefrit: `Test drive confirmation – {merk} {model}`,
+      afspraak: `Appointment confirmation – {merk} {model}`,
+      showroom: `Showroom visit quote – {merk} {model}`,
+      followup: `Follow-up quote – {merk} {model}`,
+      status: `Delivery status – {merk} {model}`
+    }
+  };
+
+  lastSubject = subj[currentLang][type].replace('{merk}', merk).replace('{model}', model);
+
+  const bodyTemplate = currentLang === 'nl' ? emailBodiesNL[type] : emailBodiesEN[type];
+  lastBody = greet + '\n\n' + bodyTemplate(data);
+
+  document.getElementById('previewContent').innerText = lastBody;
+  document.getElementById('copyBtn').disabled = false;
+  document.getElementById('outlookBtn').disabled = false;
+}
