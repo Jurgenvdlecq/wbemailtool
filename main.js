@@ -1,261 +1,145 @@
-// Wittebrug E-mailgenerator – main.js (aangepast)
+function genereerEmail() {
+  const aanhef = document.getElementById("aanhef").value;
+  const voornaam = document.getElementById("voornaam").value;
+  const achternaam = document.getElementById("achternaam").value;
+  const merk = document.getElementById("merk").value;
+  const model = document.getElementById("model").value;
+  const type = document.getElementById("emailtype").value;
 
-// Modellen
-const seatModels = ["Ibiza", "Leon", "Leon Sportstourer", "Arona", "Ateca"];
-const cupraModels = ["Born", "Formentor", "Leon", "Leon Sportstourer", "Terramar", "Tavascan"];
-
-// Helpers
-function translateDuration(text) {
-  if (!text) return '';
-  const mappings = [
-    { nl: 'weken', en: 'weeks' },
-    { nl: 'week',  en: 'week'  },
-    { nl: 'dagen', en: 'days'  },
-    { nl: 'dag',   en: 'day'   },
-    { nl: 'maanden', en: 'months' },
-    { nl: 'maand', en: 'month' }
-  ];
-  let result = text;
-  mappings.forEach(m => {
-    const re = new RegExp('\\b(\\d+)\\s*' + m.nl + '\\b', 'gi');
-    result = result.replace(re, '$1 ' + m.en);
-  });
-  return result;
-}
-function formatPriceNL(num) {
-  return '€ ' + new Intl.NumberFormat('nl-NL').format(num) + ',-';
-}
-
-// Dropdown logica
-function populateModels() {
-  const merk = document.getElementById('merk').value;
-  const modelSelect = document.getElementById('model');
-  modelSelect.innerHTML = '<option value="">-- Kies --</option>';
-  const list = merk === 'SEAT' ? seatModels : (merk === 'CUPRA' ? cupraModels : []);
-  list.forEach(m => {
-    const opt = document.createElement('option'); opt.value = m; opt.textContent = m;
-    modelSelect.appendChild(opt);
-  });
-}
-
-// Toast
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.style.display = 'block';
-  setTimeout(() => t.style.display = 'none', 3000);
-}
-
-// Validatie
-function validateField(id) {
-  const f = document.getElementById(id), e = document.getElementById('error-' + id);
-  if (f.required && !f.value.trim()) {
-    f.classList.add('error'); e.textContent = 'Dit veld is verplicht'; e.style.display = 'block';
-    return false;
-  }
-  f.classList.remove('error'); if (e) e.style.display = 'none'; return true;
-}
-function validateForm() {
-  let ok = true;
-  ['aanhef','voornaam','achternaam','merk','model','emailtype'].forEach(id => {
-    if (!validateField(id)) ok = false;
-  });
-  document.querySelectorAll('.field-group').forEach(g => {
-    if (getComputedStyle(g).display !== 'none') {
-      const inp = g.querySelector('input,select');
-      if (inp && inp.required && !validateField(inp.id)) ok = false;
-    }
-  });
-  document.getElementById('generateBtn').disabled = !ok;
-  return ok;
-}
-
-// Toon/verberg velden op basis van type e-mail
-function toggleFields() {
-  const t = document.getElementById('emailtype').value;
-  // Bij lease geen levertijd, wel looptijd
-  const map = {
-    offerte: ['prijs','levertijd'],
-    inruil:  ['prijs','levertijd','inruilprijs','kenteken'],
-    proefrit:['datum','tijd'],
-    afspraak:['datum','tijd'],
-    showroom:['prijs','levertijd'],
-    lease:   ['looptijd','kilometers','eigenrisico','maandbedrag','banden'],
-    followup:['model'],
-    status:  ['leverdatum']
-  };
-  const all = ['prijs','levertijd','inruilprijs','kenteken','datum','tijd','looptijd','kilometers','eigenrisico','maandbedrag','banden','leverdatum'];
-  all.forEach(id => {
-    const el = document.getElementById('veld-' + id);
-    if (el) el.style.display = map[t]?.includes(id) ? 'block' : 'none';
-  });
-  validateForm();
-}
-
-document.querySelectorAll('input,select').forEach(el => {
-  if (['aanhef','voornaam','achternaam','merk','model','emailtype','prijs','levertijd','datum','tijd','looptijd','kilometers'].includes(el.id)) {
-    el.addEventListener('blur', () => validateField(el.id));
-  }
-});
-
-let currentLang = 'nl', lastSubject = '', lastBody = '';
-function updateLanguage() {
-  currentLang = document.getElementById('languageSelect').value;
-  if (!document.getElementById('copyBtn').disabled) generateEmail();
-}
-
-// E-mail genereren en templates invullen
-
-function generateEmail() {
-  if (!validateForm()) {
-    showToast('Vul eerst alle verplichte velden in.');
-    return;
+  let aanspreking = "";
+  if (aanhef === "voornaam") {
+    aanspreking = `Beste ${voornaam},`;
+  } else if (aanhef === "heer") {
+    aanspreking = `Beste heer ${achternaam},`;
+  } else if (aanhef === "mevrouw") {
+    aanspreking = `Beste mevrouw ${achternaam},`;
   }
 
-  const aan = document.getElementById('aanhef').value;
-  const fn = document.getElementById('voornaam').value.trim();
-  const ln = document.getElementById('achternaam').value.trim();
-  const merk = document.getElementById('merk').value;
-  const model = document.getElementById('model').value;
-  const type = document.getElementById('emailtype').value;
+  const prijs = document.getElementById("prijs")?.value || "";
+  const levertijd = document.getElementById("levertijd")?.value || "";
+  const inruilprijs = document.getElementById("inruilprijs")?.value || "";
+  const kenteken = document.getElementById("kenteken")?.value || "";
+  const datum = document.getElementById("datum")?.value;
+  const tijd = document.getElementById("tijd")?.value || "";
+  const looptijd = document.getElementById("looptijd")?.value || "";
+  const kilometers = document.getElementById("kilometers")?.value || "";
+  const eigenrisico = document.getElementById("eigenrisico")?.value || "";
+  const maandbedrag = document.getElementById("maandbedrag")?.value || "";
+  const banden = document.getElementById("banden")?.value || "";
+  const leverdatum = document.getElementById("leverdatum")?.value;
 
-  // Aanhef
-  let greet = '';
-  if (aan === 'voornaam') greet = currentLang === 'nl' ? `Beste ${fn},` : `Dear ${fn},`;
-  else if (aan === 'heer') greet = currentLang === 'nl' ? `Beste heer ${ln},` : `Dear Mr. ${ln},`;
-  else greet = currentLang === 'nl' ? `Beste mevrouw ${ln},` : `Dear Ms. ${ln},`;
+  const datumFormatted = datum
+    ? new Date(datum).toLocaleDateString("nl-NL", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+  const leverdatumFormatted = leverdatum
+    ? new Date(leverdatum).toLocaleDateString("nl-NL", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
 
-  const data = {
-    merk,
-    model,
-    prijs: formatPriceNL(document.getElementById('prijs')?.value.trim()),
-    levertijd: currentLang === 'en' ? translateDuration(document.getElementById('levertijd')?.value.trim()) : document.getElementById('levertijd')?.value.trim(),
-    inruilprijs: formatPriceNL(document.getElementById('inruilprijs')?.value.trim()),
-    kenteken: document.getElementById('kenteken')?.value.trim(),
-    datum: document.getElementById('datum')?.value ? new Date(document.getElementById('datum')?.value).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : '',
-    tijd: document.getElementById('tijd')?.value,
-    looptijd: document.getElementById('looptijd')?.value,
-    kilometers: document.getElementById('kilometers')?.value,
-    eigenrisico: formatPriceNL(document.getElementById('eigenrisico')?.value),
-    maandbedrag: formatPriceNL(document.getElementById('maandbedrag')?.value),
-    banden: document.getElementById('banden')?.value,
-    leverdatum: document.getElementById('leverdatum')?.value ? new Date(document.getElementById('leverdatum')?.value).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
-  };
+  let tekst = `${aanspreking}\n\n`;
 
-  // Onderwerp
-  const subjMap = {
-    nl: {
-      offerte: `Offerteaanvraag – ${merk} ${model}`,
-      inruil: `Offerte ${merk} ${model} inclusief inruil`,
-      lease: `Private lease ${merk} ${model}`,
-      proefrit: `Bevestiging proefrit ${merk} ${model}`,
-      afspraak: `Bevestiging afspraak ${merk} ${model}`,
-      showroom: `Showroombezoek – Offerte ${merk} ${model}`,
-      followup: `Follow-up offerte ${merk} ${model}`,
-      status: `Status levering ${merk} ${model}`
-    },
-    en: {
-      offerte: `Quote request – ${merk} ${model}`,
-      inruil: `Quote including trade-in – ${merk} ${model}`,
-      lease: `Private lease proposal – ${merk} ${model}`,
-      proefrit: `Test drive confirmation – ${merk} ${model}`,
-      afspraak: `Appointment confirmation – ${merk} ${model}`,
-      showroom: `Showroom visit quote – ${merk} ${model}`,
-      followup: `Follow-up quote – ${merk} ${model}`,
-      status: `Delivery status – ${merk} ${model}`
-    }
-  };
-
-  lastSubject = subjMap[currentLang][type];
-  const bodyFunc = currentLang === 'nl' ? emailBodiesNL[type] : emailBodiesEN[type];
-  lastBody = greet + "\n\n" + bodyFunc(data);
-
-  document.getElementById('previewContent').innerText = lastBody;
-  document.getElementById('copyBtn').disabled = false;
-  document.getElementById('outlookBtn').disabled = false;
-}
-function copyEmail(){ navigator.clipboard.writeText(lastBody); showToast('E-mailtekst gekopieerd naar klembord'); }
-function openInOutlook(){ window.location.href = `mailto:?subject=${encodeURIComponent(lastSubject)}&body=${encodeURIComponent(lastBody)}`; }
-function resetForm(){ document.getElementById('previewContent').innerText = ''; document.getElementById('copyBtn').disabled = true; document.getElementById('outlookBtn').disabled = true; }
-
-// Listeners & init
-['merk','emailtype'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{populateModels();toggleFields();validateForm();}));
-document.getElementById('emailForm').addEventListener('input', validateForm);
-document.getElementById('generateBtn').addEventListener('click', generateEmail);
-document.getElementById('copyBtn').addEventListener('click', copyEmail);
-document.getElementById('outlookBtn').addEventListener('click', openInOutlook);
-document.getElementById('resetBtn').addEventListener('click', resetForm);
-document.getElementById('languageSelect').addEventListener('change', updateLanguage);
-window.addEventListener('DOMContentLoaded', ()=>{populateModels();toggleFields();validateForm();updateLanguage();});
-
-
-// Toevoegen of vervangen van de generateEmail functie
-function generateEmail() {
-  if (!validateForm()) {
-    showToast('Vul eerst alle verplichte velden in.');
-    return;
+  if (type === "offerte") {
+    tekst += `Hartelijk dank voor uw interesse in de ${merk} ${model}.\n\n`;
+    tekst += `De totale aanschafprijs bedraagt €${prijs}, inclusief afleverkosten.\n`;
+    tekst += `De verwachte levertijd is ongeveer ${levertijd} na akkoord.\n\n`;
+    tekst += `In de bijlage vindt u de complete offerte.\n\n`;
+    tekst += `Uiteraard bent u van harte welkom om de auto in het echt te bekijken of een proefrit te maken.`;
   }
 
-  const aan = document.getElementById('aanhef').value;
-  const fn = document.getElementById('voornaam').value.trim();
-  const ln = document.getElementById('achternaam').value.trim();
-  const merk = document.getElementById('merk').value;
-  const model = document.getElementById('model').value;
-  const type = document.getElementById('emailtype').value;
+  if (type === "inruil") {
+    tekst += `Hartelijk dank voor uw interesse in de ${merk} ${model}.\n\n`;
+    tekst += `Zoals besproken stuur ik u hierbij de offerte, inclusief de definitieve inruilwaarde voor uw huidige auto (kenteken ${kenteken}).\n\n`;
+    tekst += `De totale aanschafprijs bedraagt €${prijs}, inclusief afleverkosten.\n`;
+    tekst += `De inruilwaarde van uw huidige auto bedraagt €${inruilprijs}.\n`;
+    tekst += `De verwachte levertijd is ongeveer ${levertijd} na akkoord.\n\n`;
+    tekst += `In de bijlage vindt u:` + 
+             `\n1. De offerte voor de ${merk} ${model} met specificaties en prijsdetails.` +
+             `\n2. De taxatie van uw huidige auto, inclusief het inruilbedrag.` +
+             `\n3. Optioneel: financierings- of leaseopties (indien van toepassing).\n\n`;
+    tekst += `Graag nodig ik u uit voor een definitieve taxatie in onze showroom, zodat we het inruilbedrag definitief kunnen vaststellen.`;
+  }
 
-  // Aanhef
-  let greet = '';
-  if (aan === 'voornaam') greet = currentLang === 'nl' ? `Beste {fn},` : `Dear {fn},`;
-  else if (aan === 'heer') greet = currentLang === 'nl' ? `Beste heer {ln},` : `Dear Mr. {ln},`;
-  else greet = currentLang === 'nl' ? `Beste mevrouw {ln},` : `Dear Ms. {ln},`;
+  if (type === "lease") {
+    tekst += `Hartelijk dank voor uw interesse in de ${merk} ${model}.\n\n`;
+    tekst += `Zoals beloofd stuur ik hierbij ons private leasevoorstel. In deze e-mail vindt u de belangrijkste details:\n`;
+    tekst += `• Model: ${merk} ${model}\n• Maandbedrag: €${maandbedrag} per maand\n• Looptijd: ${looptijd} maanden\n`;
+    tekst += `• Kilometrage: ${kilometers} km per jaar\n• Type banden: ${banden}\n• Eigen risico: €${eigenrisico}\n`;
+    tekst += `• Inclusief: Wegenbelasting, onderhoud, reparaties en allriskverzekering\n\n`;
+    tekst += `Vervolgstappen:` +
+             `\n1. Reageer positief op deze e-mail wanneer u de private lease-aanvraag wilt starten.` +
+             `\n2. U ontvangt dan een e-mail van Volkswagen Pon Financial Services (VWPFS) om de krediettoetsing te doorlopen.\n\n`;
+    tekst += `Laat me weten wat u ervan vindt of als u vragen heeft; ik help u graag verder!`;
+  }
 
-  // Velden ophalen
-  const data = {
-    merk,
-    model,
-    prijs: formatPriceNL(document.getElementById('prijs')?.value.trim()),
-    levertijd: currentLang === 'en' ? translateDuration(document.getElementById('levertijd')?.value.trim()) : document.getElementById('levertijd')?.value.trim(),
-    inruilprijs: formatPriceNL(document.getElementById('inruilprijs')?.value.trim()),
-    kenteken: document.getElementById('kenteken')?.value.trim(),
-    datum: new Date(document.getElementById('datum')?.value).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
-    tijd: document.getElementById('tijd')?.value,
-    looptijd: document.getElementById('looptijd')?.value,
-    kilometers: document.getElementById('kilometers')?.value,
-    eigenrisico: formatPriceNL(document.getElementById('eigenrisico')?.value),
-    maandbedrag: formatPriceNL(document.getElementById('maandbedrag')?.value),
-    banden: document.getElementById('banden')?.value,
-    leverdatum: new Date(document.getElementById('leverdatum')?.value).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })
+  if (type === "proefrit") {
+    tekst += `Hartelijk dank voor uw interesse in de ${merk} ${model}.\n\n`;
+    tekst += `Hierbij bevestigen wij graag uw proefritafspraak op ${datumFormatted} om ${tijd} met de ${merk} ${model}.\n\n`;
+    tekst += `Wij ontvangen u bij Wittebrug SEAT, Donau 120, 2491 BC Den Haag. Vergeet alstublieft uw rijbewijs niet mee te nemen.\n\n`;
+    tekst += `Mocht u vooraf nog vragen hebben of iets willen wijzigen, neem gerust contact met ons op.`;
+  }
+
+  if (type === "afspraak") {
+    tekst += `Leuk dat we een afspraak hebben gepland voor de ${merk} ${model} op ${datumFormatted} om ${tijd}.\n\n`;
+    tekst += `U bent van harte welkom bij Wittebrug SEAT, Donau 120, 2491 BC Den Haag.\n\n`;
+    tekst += `Heeft u vooraf nog vragen of wilt u de afspraak wijzigen? Laat het gerust weten.`;
+  }
+
+  if (type === "showroom") {
+    tekst += `Hartelijk dank voor uw bezoek aan onze showroom.\n\n`;
+    tekst += `Zoals besproken ontvangt u hierbij de offerte voor de ${merk} ${model}.\n\n`;
+    tekst += `De totale aanschafprijs bedraagt €${prijs}, inclusief afleverkosten.\n`;
+    tekst += `De verwachte levertijd is ${levertijd}.\n\n`;
+    tekst += `De offerte heb ik als bijlage toegevoegd.\n\n`;
+    tekst += `Heeft u nog vragen of opmerkingen? Laat het gerust weten; ik help u graag verder.`;
+  }
+
+  if (type === "followup") {
+    tekst += `Enige tijd geleden ontving u van mij de offerte voor de ${merk} ${model}.\n\n`;
+    tekst += `Ik hoor graag wat u ervan vindt en of u nog vragen heeft over de offerte of de uitvoering.\n\n`;
+    tekst += `Uiteraard sta ik voor u klaar om eventuele onderdelen van de offerte toe te lichten of alternatieve opties te bespreken.`;
+  }
+
+  if (type === "status") {
+    tekst += `Wij hebben voor u de ${merk} ${model} in bestelling staan en willen u graag op de hoogte houden van de status van deze bestelling.\n\n`;
+    tekst += `We verwachten dat wij de auto rond ${leverdatumFormatted} kunnen leveren. Op dit moment is dit nog niet definitief, dus dit kan nog wijzigen.\n\n`;
+    tekst += `Mocht dit wijzigen, dan laten wij het uiteraard aan u weten.\n\n`;
+    tekst += `Mocht u nog vragen hebben, neem dan gerust contact met ons op.`;
+  }
+
+  document.getElementById("output").textContent = tekst;
+
+  const onderwerp = {
+    offerte: `Offerteaanvraag – ${merk} ${model}`,
+    inruil: `Offerte ${merk} ${model} inclusief inruilvoorstel`,
+    proefrit: `Bevestiging proefrit – ${merk} ${model}`,
+    afspraak: `Bevestiging afspraak – ${merk} ${model}`,
+    showroom: `Offerte ${merk} ${model} – nav showroombezoek`,
+    lease: `Private lease ${merk} ${model} – voorstel`,
+    followup: `Follow-up offerte – ${merk} ${model}`,
+    status: `Status levering – ${merk} ${model}`
   };
 
-  // Onderwerp
-  const subj = {
-    nl: {
-      offerte: `Offerteaanvraag – {merk} {model}`,
-      inruil: `Offerte {merk} {model} inclusief inruil`,
-      lease: `Private lease {merk} {model}`,
-      proefrit: `Bevestiging proefrit {merk} {model}`,
-      afspraak: `Bevestiging afspraak {merk} {model}`,
-      showroom: `Showroombezoek – Offerte {merk} {model}`,
-      followup: `Follow-up offerte {merk} {model}`,
-      status: `Status levering {merk} {model}`
-    },
-    en: {
-      offerte: `Quote request – {merk} {model}`,
-      inruil: `Quote including trade-in – {merk} {model}`,
-      lease: `Private lease proposal – {merk} {model}`,
-      proefrit: `Test drive confirmation – {merk} {model}`,
-      afspraak: `Appointment confirmation – {merk} {model}`,
-      showroom: `Showroom visit quote – {merk} {model}`,
-      followup: `Follow-up quote – {merk} {model}`,
-      status: `Delivery status – {merk} {model}`
-    }
+  const subject = onderwerp[type] || `${merk} ${model}`;
+  const mailBody = encodeURIComponent(tekst);
+  const outlookBtn = document.getElementById("outlookBtn");
+  outlookBtn.onclick = () => {
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${mailBody}`;
   };
+  outlookBtn.style.display = 'inline-block';
 
-  lastSubject = subj[currentLang][type].replace('{merk}', merk).replace('{model}', model);
+  const feedback = document.getElementById("feedback");
+  feedback.textContent = "✅ E-mailtekst is gegenereerd!";
+  setTimeout(() => (feedback.textContent = ""), 3000);
+}
 
-  const bodyTemplate = currentLang === 'nl' ? emailBodiesNL[type] : emailBodiesEN[type];
-  lastBody = greet + '\n\n' + bodyTemplate(data);
-
-  document.getElementById('previewContent').innerText = lastBody;
-  document.getElementById('copyBtn').disabled = false;
-  document.getElementById('outlookBtn').disabled = false;
+function kopieerTekst() {
+  const tekst = document.getElementById("output").textContent;
+  navigator.clipboard.writeText(tekst);
 }
