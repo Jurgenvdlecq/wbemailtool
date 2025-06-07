@@ -104,8 +104,13 @@ function updateLanguage() {
 }
 
 // E-mail genereren en templates invullen
+
 function generateEmail() {
-  if (!validateForm()) { showToast('Vul eerst alle verplichte velden in.'); return; }
+  if (!validateForm()) {
+    showToast('Vul eerst alle verplichte velden in.');
+    return;
+  }
+
   const aan = document.getElementById('aanhef').value;
   const fn = document.getElementById('voornaam').value.trim();
   const ln = document.getElementById('achternaam').value.trim();
@@ -119,100 +124,55 @@ function generateEmail() {
   else if (aan === 'heer') greet = currentLang === 'nl' ? `Beste heer ${ln},` : `Dear Mr. ${ln},`;
   else greet = currentLang === 'nl' ? `Beste mevrouw ${ln},` : `Dear Ms. ${ln},`;
 
-  // Velden
-  const pr = document.getElementById('prijs').value.trim();
-  const prTxt = pr ? formatPriceNL(pr) : '';
-  const lv = document.getElementById('levertijd')?.value.trim();
-  const lvTxt = currentLang === 'en' ? translateDuration(lv) : lv;
-  const lt = document.getElementById('looptijd')?.value.trim();
-  const km = document.getElementById('kilometers')?.value.trim();
-  const er = document.getElementById('eigenrisico')?.value.trim();
-  const mb = document.getElementById('maandbedrag')?.value.trim();
-  const bd = document.getElementById('banden')?.value;
-  const dt = document.getElementById('datum')?.value;
-  const tm = document.getElementById('tijd')?.value;
-  const ld = document.getElementById('leverdatum')?.value;
-  const dtFmt = dt ? new Date(dt).toLocaleDateString(currentLang==='nl'?'nl-NL':'en-US',{day:'numeric',month:'long',year:'numeric'}) : '';
-  const ldFmt = ld ? new Date(ld).toLocaleDateString(currentLang==='nl'?'nl-NL':'en-US',{day:'numeric',month:'long',year:'numeric'}) : '';
-
-  // Subject templates
-  const subjNL = {
-    offerte: `Offerteaanvraag – ${merk} ${model}`,
-    inruil:  `Offerte ${merk} ${model} inclusief inruil`,
-    lease:   `Private lease ${merk} ${model}`,
-    proefrit:`Bevestiging proefrit ${merk} ${model}`,
-    afspraak:`Bevestiging afspraak ${merk} ${model}`,
-    showroom:`Showroombezoek – Offerte ${merk} ${model}`,
-    followup:`Follow-up offerte ${merk} ${model}`,
-    status:  `Status levering ${merk} ${model}`
+  const data = {
+    merk,
+    model,
+    prijs: formatPriceNL(document.getElementById('prijs')?.value.trim()),
+    levertijd: currentLang === 'en' ? translateDuration(document.getElementById('levertijd')?.value.trim()) : document.getElementById('levertijd')?.value.trim(),
+    inruilprijs: formatPriceNL(document.getElementById('inruilprijs')?.value.trim()),
+    kenteken: document.getElementById('kenteken')?.value.trim(),
+    datum: document.getElementById('datum')?.value ? new Date(document.getElementById('datum')?.value).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : '',
+    tijd: document.getElementById('tijd')?.value,
+    looptijd: document.getElementById('looptijd')?.value,
+    kilometers: document.getElementById('kilometers')?.value,
+    eigenrisico: formatPriceNL(document.getElementById('eigenrisico')?.value),
+    maandbedrag: formatPriceNL(document.getElementById('maandbedrag')?.value),
+    banden: document.getElementById('banden')?.value,
+    leverdatum: document.getElementById('leverdatum')?.value ? new Date(document.getElementById('leverdatum')?.value).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
   };
-  const subjEN = {
-    offerte: `Quote request – ${merk} ${model}`,
-    inruil:  `Quote including trade-in – ${merk} ${model}`,
-    lease:   `Private lease proposal – ${merk} ${model}`,
-    proefrit:`Test drive confirmation – ${merk} ${model}`,
-    afspraak:`Appointment confirmation – ${merk} ${model}`,
-    showroom:`Showroom visit quote – ${merk} ${model}`,
-    followup:`Follow-up quote – ${merk} ${model}`,
-    status:  `Delivery status – ${merk} ${model}`
-  };
-  lastSubject = currentLang === 'nl' ? subjNL[type] : subjEN[type];
 
-  // Body opbouw per type
-  let body = greet + "\n\n";
-  switch(type) {
-    case 'offerte':
-      body += `Hartelijk dank voor uw interesse in de ${merk} ${model}.\n`;
-      body += `De totale aanschafprijs bedraagt ${prTxt}, inclusief afleverkosten.\n`;
-      body += `De verwachte levertijd is ongeveer ${lvTxt} na akkoord.\n\n`;
-      body += `In de bijlage vindt u de complete offerte.\n`;
-      body += `Uiteraard bent u welkom om de auto in het echt te bekijken of een proefrit te maken.\n`;
-      break;
-    case 'inruil':
-      body += `Zoals besproken ontvangt u hierbij de vrijblijvende offerte voor de ${merk} ${model}.\n`;
-      body += `De totale aanschafprijs bedraagt ${prTxt}, inclusief afleverkosten.\n`;
-      body += `Inruilauto (kenteken ${kt}) is gewaardeerd op ${formatPriceNL(er)}.\n`;
-      body += `De levertijd is ongeveer ${lvTxt} na akkoord.\n\n`;
-      body += `U bent van harte welkom voor een definitieve taxatie.\n`;
-      break;
-    case 'proefrit':
-      body += `Hierbij bevestigen wij uw proefritafspraak voor de ${merk} ${model} op ${dtFmt} om ${tm}.\n`;
-      body += `Wij ontvangen u bij Wittebrug SEAT, Donau 120, Den Haag. Vergeet uw rijbewijs niet.\n`;
-      break;
-    case 'afspraak':
-      body += `Hierbij bevestigen wij uw afspraak voor de ${merk} ${model} op ${dtFmt} om ${tm}.\n`;
-      body += `Locatie: Donau 120, Den Haag.\n`;
-      break;
-    case 'showroom':
-      body += `Bedankt voor uw bezoek aan onze showroom. Zoals afgesproken stuur ik u de offerte voor de ${merk} ${model}.\n`;
-      body += `De prijs bedraagt ${prTxt}, inclusief afleverkosten.\n`;
-      break;
-    case 'lease':
-      body += `Hierbij ontvangt u ons private lease voorstel voor de ${merk} ${model}.\n`;
-      body += `• Looptijd: ${lt} maanden\n`;
-      body += `• Kilometers per jaar: ${km} km\n`;
-      body += `• Eigen risico: ${formatPriceNL(er)}\n`;
-      body += `• Maandbedrag: ${formatPriceNL(mb)} incl. btw\n`;
-      body += `• Type banden: ${bd}\n`;
-      body += `In de bijlage vindt u het volledige voorstel.\n`;
-      break;
-    case 'followup':
-      body += `Enige tijd geleden stuurde ik u de offerte voor de ${merk} ${model}.\n`;
-      body += `Ik hoor graag wat u ervan vindt of als u vragen heeft.\n`;
-      break;
-    case 'status':
-      body += `Wij houden u graag op de hoogte van de status van uw bestelling.\n`;
-      body += `Uw ${merk} ${model} staat in bestelling en wordt verwacht op ${ldFmt}.\n`;
-      body += `Dit is nog onder voorbehoud; wijzigingen zullen we direct melden.\n`;
-      break;
-  }
-  lastBody = body;
-  document.getElementById('previewContent').innerText = body;
+  // Onderwerp
+  const subjMap = {
+    nl: {
+      offerte: `Offerteaanvraag – ${merk} ${model}`,
+      inruil: `Offerte ${merk} ${model} inclusief inruil`,
+      lease: `Private lease ${merk} ${model}`,
+      proefrit: `Bevestiging proefrit ${merk} ${model}`,
+      afspraak: `Bevestiging afspraak ${merk} ${model}`,
+      showroom: `Showroombezoek – Offerte ${merk} ${model}`,
+      followup: `Follow-up offerte ${merk} ${model}`,
+      status: `Status levering ${merk} ${model}`
+    },
+    en: {
+      offerte: `Quote request – ${merk} ${model}`,
+      inruil: `Quote including trade-in – ${merk} ${model}`,
+      lease: `Private lease proposal – ${merk} ${model}`,
+      proefrit: `Test drive confirmation – ${merk} ${model}`,
+      afspraak: `Appointment confirmation – ${merk} ${model}`,
+      showroom: `Showroom visit quote – ${merk} ${model}`,
+      followup: `Follow-up quote – ${merk} ${model}`,
+      status: `Delivery status – ${merk} ${model}`
+    }
+  };
+
+  lastSubject = subjMap[currentLang][type];
+  const bodyFunc = currentLang === 'nl' ? emailBodiesNL[type] : emailBodiesEN[type];
+  lastBody = greet + "\n\n" + bodyFunc(data);
+
+  document.getElementById('previewContent').innerText = lastBody;
   document.getElementById('copyBtn').disabled = false;
   document.getElementById('outlookBtn').disabled = false;
 }
-
-// Copy & Outlook
 function copyEmail(){ navigator.clipboard.writeText(lastBody); showToast('E-mailtekst gekopieerd naar klembord'); }
 function openInOutlook(){ window.location.href = `mailto:?subject=${encodeURIComponent(lastSubject)}&body=${encodeURIComponent(lastBody)}`; }
 function resetForm(){ document.getElementById('previewContent').innerText = ''; document.getElementById('copyBtn').disabled = true; document.getElementById('outlookBtn').disabled = true; }
