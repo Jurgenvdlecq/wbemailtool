@@ -139,7 +139,8 @@ function generateEmail() {
     // … overige NL-meldingen …
   };
   const templatesEN = {
-    offerte: d=>`${greet}\n\nThank you for your interest in the ${d.merk} ${d.model}.\nThe total purchase price is ${formatPriceNL(d.prijs)} including delivery costs.\nThe estimated delivery time is approximately ${d.levertijd} upon confirmation.\n\nYou’ll find the full quote attached.\nYou’re welcome to visit our showroom for a viewing or test drive.`,
+    offerte: d=>`${greet}\n\nThank you for your interest in the ${d.merk} ${d.model}.\nThe total purchase price is ${formatPriceNL(d.prijs)} including delivery costs.\nThe estimated delivery time is approximately ${translateDuration(d.levertijd)} upon confirmation.
+.\n\nYou’ll find the full quote attached.\nYou’re welcome to visit our showroom for a viewing or test drive.`,
     // … overige EN-meldingen …
   };
   const type = document.getElementById('emailtype').value;
