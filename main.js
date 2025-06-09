@@ -7,6 +7,22 @@ function formatPriceNL(val) {
   const n = Number(val) || 0;
   return '€ ' + new Intl.NumberFormat('nl-NL').format(n) + ',-';
 }
+/**
+ * Vertaalt Nederlandse tijdsaanduidingen naar Engels
+ */
+function translateDuration(text) {
+  if (!text) return '';
+  const mapping = {
+    'weken': 'weeks',
+    'week':  'week',
+    'maanden': 'months',
+    'maand':   'month',
+    'dagen': 'days',
+    'dag':   'day'
+  };
+  return text.replace(/\b(\d+)\s*(weken|week|maanden|maand|dagen|dag)\b/gi,
+    (_, num, unit) => `${num} ${mapping[unit.toLowerCase()]}`);
+}
 
 let currentLang = 'nl';
 
