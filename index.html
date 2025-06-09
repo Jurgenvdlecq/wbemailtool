@@ -22,6 +22,7 @@
     <main>
       <section class="form-section">
         <form id="emailForm" novalidate>
+          <!-- Klantgegevens -->
           <fieldset class="fieldset-group">
             <legend>Klantgegevens</legend>
             <div class="field-group">
@@ -42,7 +43,7 @@
               <input type="text" id="achternaam" required placeholder="Bijv. Janssen"/>
             </div>
           </fieldset>
-
+          <!-- Merk en Model -->
           <fieldset class="fieldset-group">
             <legend>Merk en Model</legend>
             <div class="field-group">
@@ -60,7 +61,7 @@
               </select>
             </div>
           </fieldset>
-
+          <!-- Type e-mail -->
           <fieldset class="fieldset-group">
             <legend>Type e-mail</legend>
             <div class="field-group">
@@ -78,7 +79,7 @@
               </select>
             </div>
           </fieldset>
-
+          <!-- Specifieke gegevens -->
           <fieldset class="fieldset-group">
             <legend>Specifieke gegevens</legend>
             <div class="field-group" id="veld-prijs">
@@ -135,7 +136,7 @@
               <input type="date" id="leverdatum"/>
             </div>
           </fieldset>
-
+          <!-- Knoppen -->
           <div class="button-row">
             <button type="button" id="generateBtn" disabled>📧 Genereer e-mail</button>
             <button type="button" id="outlookBtn" style="display:none;">✉️ Open in Outlook</button>
@@ -143,7 +144,7 @@
           </div>
         </form>
       </section>
-
+      <!-- Preview -->
       <section class="preview-section">
         <h2>Preview</h2>
         <pre id="output"></pre>
