@@ -42,6 +42,7 @@
               <input type="text" id="achternaam" required placeholder="Bijv. Janssen"/>
             </div>
           </fieldset>
+
           <fieldset class="fieldset-group">
             <legend>Merk en Model</legend>
             <div class="field-group">
@@ -54,9 +55,12 @@
             </div>
             <div class="field-group">
               <label for="model">Model</label>
-              <input type="text" id="model" required placeholder="Bijv. Ibiza"/>
+              <select id="model" required>
+                <option value="">-- Kies --</option>
+              </select>
             </div>
           </fieldset>
+
           <fieldset class="fieldset-group">
             <legend>Type e-mail</legend>
             <div class="field-group">
@@ -74,6 +78,7 @@
               </select>
             </div>
           </fieldset>
+
           <fieldset class="fieldset-group">
             <legend>Specifieke gegevens</legend>
             <div class="field-group" id="veld-prijs">
@@ -130,6 +135,7 @@
               <input type="date" id="leverdatum"/>
             </div>
           </fieldset>
+
           <div class="button-row">
             <button type="button" id="generateBtn" disabled>📧 Genereer e-mail</button>
             <button type="button" id="outlookBtn" style="display:none;">✉️ Open in Outlook</button>
@@ -137,6 +143,7 @@
           </div>
         </form>
       </section>
+
       <section class="preview-section">
         <h2>Preview</h2>
         <pre id="output"></pre>
