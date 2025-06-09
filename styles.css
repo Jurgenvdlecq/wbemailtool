@@ -1,110 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
-
-:root {
-  --blue: #0033A0;
-  --light-gray: #f0f4fa;
-  --bg: #f5f5f5;
-}
-
 * { box-sizing: border-box; }
-body {
-  font-family: 'Open Sans', sans-serif;
-  margin: 0;
-  background: var(--bg);
-  color: #333;
-}
-.header {
-  background: var(--blue);
-  color: white;
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.language-select select {
-  padding: 8px;
-  border-radius: 4px;
-  border: none;
-  font-size: 1rem;
-}
-
-.container {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  flex-wrap: wrap;
-}
-.card {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-.form-card { flex: 1 1 400px; }
-.preview-card { flex: 1 1 400px; min-width: 300px; }
-
-fieldset {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: var(--light-gray);
-}
-legend { font-weight:600; padding:0 5px; }
-
-.field {
-  margin-bottom: 12px;
-}
-.field label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.field input,
-.field select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.field .error {
-  color: #D8000C;
-  font-size: 0.85rem;
-  margin-top:4px;
-}
-
-.button-group,
-.actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-button {
-  background: var(--blue);
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-button:disabled {
-  background: #999;
-  cursor: not-allowed;
-}
-.actions button {
-  flex: 1;
-}
-
-pre {
-  background: var(--light-gray);
-  padding: 15px;
-  border-radius: 6px;
-  white-space: pre-wrap;
-  word-break: break-word;
-  min-height: 200px;
-}
-
-@media (max-width: 800px) {
-  .container { flex-direction: column; }
-}
+body { font-family: 'Open Sans', sans-serif; font-size:10pt; margin:0; background:#f5f5f5; color:#333; }
+.container { max-width:1200px; margin:auto; padding:20px; }
+header { display:flex; align-items:center; justify-content:space-between; background:#0033A0; color:white; padding:15px 20px; border-radius:5px; }
+header .logo { height:40px; margin-right:15px; }
+header h1 { margin:0; font-size:1.75rem; font-weight:600; }
+.language-selection { display:flex; align-items:center; }
+.language-selection label { margin-right:5px; font-weight:600; }
+main { display:grid; grid-template-columns:1fr 1fr; column-gap:20px; margin-top:20px; }
+@media(max-width:800px){ main{display:block;} }
+.form-section, .preview-section { background:white; border-radius:5px; padding:20px; box-shadow:0 2px 6px rgba(0,0,0,0.1); margin-bottom:20px; }
+.preview-section{position:sticky; top:20px;}
+fieldset.fieldset-group{border:1px solid #ccc; padding:20px; margin-bottom:20px; border-radius:5px; background:#f0f4fa;}
+legend{font-weight:600; padding:0 5px;}
+.field-group{margin-bottom:16px;}
+.field-group label{display:block; margin-bottom:4px; font-weight:600;}
+.field-group input, .field-group select{width:100%; padding:8px; border:1px solid #ccc; border-radius:3px; font-size:10pt;}
+.field-group input:focus, .field-group select:focus{border-color:#0033A0; outline:none;}
+.error-message{color:#D8000C; font-size:0.8rem; margin-top:2px; display:none;}
+.error{border-color:#D8000C;}
+.button-row{margin-top:20px;}
+.button-row button{background:#0033A0; color:white; border:none; padding:10px 20px; margin-right:10px; border-radius:3px; cursor:pointer; font-size:1rem; display:inline-flex; align-items:center;}
+.button-row button:hover{filter:brightness(1.1);}
+.button-row .secondary{background:#6c6c6c;}
+.button-row button:disabled{background:#999; cursor:not-allowed;}
+#previewContent{background:#eef1f4; padding:20px; border-radius:5px; min-height:300px; overflow-y:auto;}
+#previewContent strong{font-weight:600;}
+.toast{position:fixed; bottom:20px; right:20px; background:#0033A0; color:white; padding:10px 15px; border-radius:5px; display:none;}

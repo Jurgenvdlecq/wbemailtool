@@ -1,162 +1,163 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wittebrug E-mailgenerator</title>
-  <link href="styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-  <header class="header">
-    <h1>Email Generator</h1>
-    <div class="language-select">
-      <select id="languageSelect">
-        <option value="nl">Nederlands</option>
-        <option value="en">English</option>
-      </select>
-    </div>
-  </header>
-  <main class="container">
-    <section class="card form-card">
-      <form id="emailForm" novalidate>
-        <fieldset>
-          <legend>Klantgegevens</legend>
-          <div class="field">
-            <label for="aanhef">Aanhef:</label>
-            <select id="aanhef" required>
-              <option value="">-- Kies --</option>
-              <option value="heer">De heer</option>
-              <option value="mevrouw">Mevrouw</option>
-              <option value="voornaam">Voornaam</option>
-            </select>
-            <div class="error" id="error-aanhef"></div>
-          </div>
-          <div class="field">
-            <label for="voornaam">Voornaam:</label>
-            <input type="text" id="voornaam" required>
-            <div class="error" id="error-voornaam"></div>
-          </div>
-          <div class="field">
-            <label for="achternaam">Achternaam:</label>
-            <input type="text" id="achternaam" required>
-            <div class="error" id="error-achternaam"></div>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Merk & Model</legend>
-          <div class="field">
-            <label for="merk">Merk:</label>
-            <select id="merk" required>
-              <option value="">-- Kies --</option>
-              <option value="SEAT">SEAT</option>
-              <option value="CUPRA">CUPRA</option>
-            </select>
-            <div class="error" id="error-merk"></div>
-          </div>
-          <div class="field">
-            <label for="model">Model:</label>
-            <select id="model" required>
-              <option value="">-- Kies --</option>
-            </select>
-            <div class="error" id="error-model"></div>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Type e-mail</legend>
-          <div class="field">
-            <label for="emailtype">Type e-mail:</label>
-            <select id="emailtype" required>
-              <option value="">-- Kies --</option>
-              <option value="offerte">Offerte zonder inruil</option>
-              <option value="inruil">Offerte met inruil</option>
-              <option value="proefrit">Proefritbevestiging</option>
-              <option value="afspraak">Afspraakbevestiging</option>
-              <option value="showroom">Showroombezoek</option>
-              <option value="lease">Private lease</option>
-              <option value="followup">Follow-up offerte</option>
-              <option value="status">Status levering</option>
-            </select>
-            <div class="error" id="error-emailtype"></div>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Specifieke gegevens</legend>
-          <div class="field" id="veld-prijs">
-            <label for="prijs">Prijs (€):</label>
-            <input type="number" id="prijs" min="0" step="0.01">
-            <div class="error" id="error-prijs"></div>
-          </div>
-          <div class="field" id="veld-levertijd">
-            <label for="levertijd">Levertijd:</label>
-            <input type="text" id="levertijd">
-            <div class="error" id="error-levertijd"></div>
-          </div>
-          <div class="field" id="veld-inruilprijs">
-            <label for="inruilprijs">Inruilprijs (€):</label>
-            <input type="number" id="inruilprijs" min="0" step="0.01">
-          </div>
-          <div class="field" id="veld-kenteken">
-            <label for="kenteken">Kenteken inruilauto:</label>
-            <input type="text" id="kenteken">
-          </div>
-          <div class="field" id="veld-datum">
-            <label for="datum">Datum afspraak/proefrit:</label>
-            <input type="date" id="datum">
-          </div>
-          <div class="field" id="veld-tijd">
-            <label for="tijd">Tijd afspraak/proefrit:</label>
-            <input type="time" id="tijd">
-          </div>
-          <div class="field" id="veld-looptijd">
-            <label for="looptijd">Looptijd (maanden):</label>
-            <input type="number" id="looptijd" min="1">
-          </div>
-          <div class="field" id="veld-kilometers">
-            <label for="kilometers">Kilometers per jaar:</label>
-            <input type="number" id="kilometers" min="0">
-          </div>
-          <div class="field" id="veld-eigenrisico">
-            <label for="eigenrisico">Eigen risico (€):</label>
-            <input type="number" id="eigenrisico" min="0" step="0.01">
-          </div>
-          <div class="field" id="veld-maandbedrag">
-            <label for="maandbedrag">Maandbedrag (€):</label>
-            <input type="number" id="maandbedrag" min="0" step="0.01">
-          </div>
-          <div class="field" id="veld-banden">
-            <label for="banden">Type banden:</label>
-            <select id="banden">
-              <option value="">-- Kies --</option>
-              <option value="Zomerbanden">Zomerbanden</option>
-              <option value="Winterbanden">Winterbanden</option>
-              <option value="Allseason banden">Allseason banden</option>
-            </select>
-          </div>
-          <div class="field" id="veld-leverdatum">
-            <label for="leverdatum">Leverdatum:</label>
-            <input type="date" id="leverdatum">
-          </div>
-        </fieldset>
-
-        <div class="button-group">
-          <button type="button" id="generateBtn" disabled>Genereer e-mail</button>
-        </div>
-      </form>
-    </section>
-
-    <section class="card preview-card">
-      <h2>Preview</h2>
-      <pre id="output"></pre>
-      <div class="actions">
-        <button type="button" id="outlookBtn" style="display:none;">Open in Outlook</button>
-        <button type="button" onclick="kopieerTekst()">Kopieer naar klembord</button>
+  <div class="container">
+    <header>
+      <img src="wittebrug_logo.png" alt="Wittebrug Logo" class="logo"/>
+      <h1>E-mailgenerator</h1>
+      <div class="language-selection">
+        <label for="languageSelect">Taal:</label>
+        <select id="languageSelect">
+          <option value="nl">Nederlands</option>
+          <option value="en">English</option>
+        </select>
       </div>
-      <div id="feedback"></div>
-    </section>
-  </main>
+    </header>
+    <main>
+      <section class="form-section">
+        <form id="emailForm" novalidate>
+          <!-- Klantgegevens -->
+          <fieldset class="fieldset-group">
+            <legend>Klantgegevens</legend>
+            <div class="field-group">
+              <label for="aanhef">Aanhef ℹ️</label>
+              <select id="aanhef" required>
+                <option value="">-- Kies --</option>
+                <option value="heer">De heer</option>
+                <option value="mevrouw">Mevrouw</option>
+                <option value="voornaam">Voornaam</option>
+              </select>
+              <span class="error-message" id="error-aanhef"></span>
+            </div>
+            <div class="field-group">
+              <label for="voornaam">Voornaam ℹ️</label>
+              <input type="text" id="voornaam" placeholder="Bijv. Anna" required/>
+              <span class="error-message" id="error-voornaam"></span>
+            </div>
+            <div class="field-group">
+              <label for="achternaam">Achternaam ℹ️</label>
+              <input type="text" id="achternaam" placeholder="Bijv. Janssen" required/>
+              <span class="error-message" id="error-achternaam"></span>
+            </div>
+          </fieldset>
+
+          <!-- Merk en Model -->
+          <fieldset class="fieldset-group">
+            <legend>Merk en Model</legend>
+            <div class="field-group">
+              <label for="merk">Merk ℹ️</label>
+              <select id="merk" required>
+                <option value="">-- Kies --</option>
+                <option value="SEAT">SEAT</option>
+                <option value="CUPRA">CUPRA</option>
+              </select>
+              <span class="error-message" id="error-merk"></span>
+            </div>
+            <div class="field-group">
+              <label for="model">Model ℹ️</label>
+              <select id="model" required>
+                <option value="">-- Kies --</option>
+              </select>
+              <span class="error-message" id="error-model"></span>
+            </div>
+          </fieldset>
+
+          <!-- Type e-mail -->
+          <fieldset class="fieldset-group">
+            <legend>Type e-mail</legend>
+            <div class="field-group">
+              <label for="emailtype">Type e-mail ℹ️</label>
+              <select id="emailtype" required>
+                <option value="">-- Kies --</option>
+                <option value="offerte">Offerte zonder inruil</option>
+                <option value="inruil">Offerte met inruil</option>
+                <option value="proefrit">Proefritbevestiging</option>
+                <option value="afspraak">Afspraakbevestiging</option>
+                <option value="showroom">Showroombezoek</option>
+                <option value="lease">Private lease</option>
+                <option value="followup">Follow-up offerte</option>
+                <option value="status">Status levering</option>
+              </select>
+              <span class="error-message" id="error-emailtype"></span>
+            </div>
+          </fieldset>
+
+          <!-- Specifieke gegevens -->
+          <fieldset class="fieldset-group">
+            <legend>Specifieke gegevens</legend>
+            <div class="field-group" id="veld-prijs">
+              <label for="prijs">Totale aanschafprijs (€) ℹ️</label>
+              <input type="number" id="prijs" min="0" placeholder="23950"/>
+            </div>
+            <div class="field-group" id="veld-levertijd">
+              <label for="levertijd">Verwachte levertijd ℹ️</label>
+              <input type="text" id="levertijd" placeholder="Bijv. 2 weken"/>
+            </div>
+            <div class="field-group" id="veld-inruilprijs">
+              <label for="inruilprijs">Inruilprijs (€) ℹ️</label>
+              <input type="number" id="inruilprijs" min="0" placeholder="5000"/>
+            </div>
+            <div class="field-group" id="veld-kenteken">
+              <label for="kenteken">Kenteken inruilauto ℹ️</label>
+              <input type="text" id="kenteken" placeholder="AB-123-CD"/>
+            </div>
+            <div class="field-group" id="veld-datum">
+              <label for="datum">Datum afspraak/proefrit ℹ️</label>
+              <input type="date" id="datum"/>
+            </div>
+            <div class="field-group" id="veld-tijd">
+              <label for="tijd">Tijd afspraak/proefrit ℹ️</label>
+              <input type="time" id="tijd"/>
+            </div>
+            <div class="field-group" id="veld-kilometers">
+              <label for="kilometers">Kilometers per jaar ℹ️</label>
+              <input type="number" id="kilometers" min="0" placeholder="15000"/>
+            </div>
+            <div class="field-group" id="veld-eigenrisico">
+              <label for="eigenrisico">Eigen risico (€) ℹ️</label>
+              <input type="number" id="eigenrisico" min="0" placeholder="250"/>
+            </div>
+            <div class="field-group" id="veld-maandbedrag">
+              <label for="maandbedrag">Maandbedrag (€) ℹ️</label>
+              <input type="number" id="maandbedrag" min="0" placeholder="299"/>
+            </div>
+            <div class="field-group" id="veld-banden">
+              <label for="banden">Type banden ℹ️</label>
+              <select id="banden">
+                <option value="">-- Kies --</option>
+                <option value="Zomerbanden">Zomerbanden</option>
+                <option value="Winterbanden">Winterbanden</option>
+                <option value="Allseason banden">Allseason banden</option>
+              </select>
+            </div>
+            <div class="field-group" id="veld-leverdatum">
+              <label for="leverdatum">Leverdatum ℹ️</label>
+              <input type="date" id="leverdatum"/>
+            </div>
+          </fieldset>
+
+          <div class="button-row">
+            <button type="button" id="generateBtn" disabled>📧 Genereer e-mail</button>
+            <button type="button" id="copyBtn" disabled>📋 Kopieer naar klembord</button>
+            <button type="button" id="outlookBtn" disabled>✉️ Open in Outlook</button>
+            <button type="reset" id="resetBtn" class="secondary">Reset</button>
+          </div>
+          <div id="toast" class="toast"></div>
+        </form>
+      </section>
+
+      <section class="preview-section">
+        <h2>Preview</h2>
+        <div id="previewContent"></div>
+      </section>
+    </main>
+  </div>
 
   <script src="main.js"></script>
 </body>
