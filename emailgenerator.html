@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wittebrug E-mailgenerator</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+    
+    * { 
+      box-sizing: border-box; 
+      margin: 0;
+      padding: 0;
+    }
+    
+    body { 
+      font-family: 'Open Sans', sans-serif; 
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333; 
+      min-height: 100vh;
+    }
+    
+    .container { 
+      max-width: 1400px; 
+      margin: 0 auto; 
+      padding: 20px; 
+    }
+    
+    header { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      background: linear-gradient(135deg, #0033A0 0%, #004cbf 100%);
+      color: #fff; 
+      padding: 20px 30px; 
+      border-radius: 12px; 
+      box-shadow: 0 8px 32px rgba(0, 51, 160, 0.3);
+      margin-bottom: 30px;
+    }
+    
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .logo { 
+      height: 50px; 
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+    
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    
+    .language-selection {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .language-selection label { 
+      font-weight: 600; 
+      font-size: 0.9rem;
+    }
+    
+    .language-selection select {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-weight: 600;
+    }
+    
+    .language-selection select option {
+      background: #0033A0;
+      color: white;
+    }
+    
+    main { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 30px; 
+    }
+    
+    @media(max-width: 1024px) { 
+      main { 
+        grid-template-columns: 1fr; 
+      }
+    }
+    
+    .form-section, .preview-section { 
+      background: #fff; 
+      border-radius: 16px; 
+      padding: 30px; 
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 51, 160, 0.1);
+    }
+    
+    .form-section h2, .preview-section h2 {
+      color: #0033A0;
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      font-weight: 700;
+    }
+    
+    .fieldset-group { 
+      border: 2px solid #e8f2ff; 
+      border-radius: 12px; 
+      padding: 25px; 
+      background: linear-gradient(135deg, #f8fbff 0%, #e8f2ff 100%);
+      margin-bottom: 25px; 
+    }
+    
+    .fieldset-group legend {
+      background: #0033A0;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .field-group { 
+      margin-bottom: 20px; 
+    }
+    
+    .field-group label { 
+      display: block; 
+      font-weight: 600; 
+      margin-bottom: 8px; 
+      color: #333;
+      font-size: 0.9rem;
+    }
+    
+    .field-group input, .field-group select { 
+      width: 100%; 
+      padding: 12px 16px; 
+      border: 2px solid #e0e6ed; 
+      border-radius: 8px; 
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+    
+    .field-group input:focus, .field-group select:focus { 
+      border-color: #0033A0; 
+      outline: none; 
+      box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
+      transform: translateY(-1px);
+    }
+    
+    .field-group input::placeholder {
+      color: #94a3b8;
+      font-style: italic;
+    }
+    
+    .button-row { 
+      margin-top: 30px; 
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .button-row button { 
+      background: linear-gradient(135deg, #0033A0 0%, #004cbf 100%);
+      color: #fff; 
+      border: none; 
+      padding: 14px 24px; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .button-row button:hover:not(:disabled) { 
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 51, 160, 0.3);
+    }
+    
+    .button-row button:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    
+    .button-row button:disabled { 
+      background: #94a3b8; 
+      cursor: not-allowed; 
+      transform: none;
+    }
+    
+    .copy-btn {
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    }
+    
+    #output { 
+      background: #f8fafc; 
+      padding: 25px; 
+      border-radius: 12px; 
+      min-height: 400px; 
+      overflow-y: auto; 
+      border: 2px solid #e2e8f0;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      color: #334155;
+    }
+    
+    #feedback { 
+      margin-top: 15px; 
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-weight: 600;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    #feedback.show {
+      opacity: 1;
+    }
+    
+    #feedback.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    
+    #feedback.error {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+    
+    .validation-error {
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+    }
+    
+    .field-error {
+      color: #ef4444;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    
+    @media(max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      
+      header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      .logo-section {
+        justify-content: center;
+      }
+      
+      .form-section, .preview-section {
+        padding: 20px;
+      }
+      
+      .fieldset-group {
+        padding: 20px;
+      }
+      
+      .button-row {
+        flex-direction: column;
+      }
+      
+      .button-row button {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-section">
+        <img src="wittebrug_logo.png" alt="Wittebrug Logo" class="logo"/>
+        <h1>E-mailgenerator</h1>
+      </div>
+      <div class="language-selection">
+        <label for="languageSelect">Taal:</label>
+        <select id="languageSelect">
+          <option value="nl">Nederlands</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+    </header>
+    
+    <main>
+      <section class="form-section">
+        <h2>📝 Formulier</h2>
+        <form id="emailForm" novalidate>
+          <!-- Klantgegevens -->
+          <fieldset class="fieldset-group">
+            <legend>👤 Klantgegevens</legend>
+            <div class="field-group">
+              <label for="aanhef">Aanhef *</label>
+              <select id="aanhef" required>
+                <option value="">-- Kies aanhef --</option>
+                <option value="heer">De heer</option>
+                <option value="mevrouw">Mevrouw</option>
+                <option value="voornaam">Voornaam</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="voornaam">Voornaam *</label>
+              <input type="text" id="voornaam" required placeholder="Bijv. Anna"/>
+            </div>
+            <div class="field-group">
+              <label for="achternaam">Achternaam *</label>
+              <input type="text" id="achternaam" required placeholder="Bijv. Janssen"/>
+            </div>
+          </fieldset>
+          
+          <!-- Merk en Model -->
+          <fieldset class="fieldset-group">
+            <legend>🚗 Merk en Model</legend>
+            <div class="field-group">
+              <label for="merk">Merk *</label>
+              <select id="merk" required>
+                <option value="">-- Kies merk --</option>
+                <option value="SEAT">SEAT</option>
+                <option value="CUPRA">CUPRA</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="model">Model *</label>
+              <select id="model" required>
+                <option value="">-- Kies model --</option>
+              </select>
+            </div>
+          </fieldset>
+          
+          <!-- Type e-mail -->
+          <fieldset class="fieldset-group">
+            <legend>📧 Type e-mail</legend>
+            <div class="field-group">
+              <label for="emailtype">Type e-mail *</label>
+              <select id="emailtype" required>
+                <option value="">-- Kies type --</option>
+                <option value="offerte">Offerte zonder inruil</option>
+                <option value="inruil">Offerte met inruil</option>
+                <option value="proefrit">Proefritbevestiging</option>
+                <option value="afspraak">Afspraakbevestiging</option>
+                <option value="showroom">Showroombezoek</option>
+                <option value="lease">Private lease</option>
+                <option value="followup">Follow-up offerte</option>
+                <option value="status">Status levering</option>
+              </select>
+            </div>
+          </fieldset>
+          
+          <!-- Specifieke gegevens -->
+          <fieldset class="fieldset-group">
+            <legend>📊 Specifieke gegevens</legend>
+            <div class="field-group" id="veld-prijs" style="display:none;">
+              <label for="prijs">Prijs (€) *</label>
+              <input type="number" id="prijs" min="0" placeholder="25000"/>
+            </div>
+            <div class="field-group" id="veld-levertijd" style="display:none;">
+              <label for="levertijd">Levertijd *</label>
+              <input type="text" id="levertijd" placeholder="Bijv. 2 weken, 3 maanden"/>
+            </div>
+            <div class="field-group" id="veld-inruilprijs" style="display:none;">
+              <label for="inruilprijs">Inruilprijs (€) *</label>
+              <input type="number" id="inruilprijs" min="0" placeholder="15000"/>
+            </div>
+            <div class="field-group" id="veld-kenteken" style="display:none;">
+              <label for="kenteken">Kenteken inruilauto *</label>
+              <input type="text" id="kenteken" placeholder="XX-123-XX"/>
+            </div>
+            <div class="field-group" id="veld-datum" style="display:none;">
+              <label for="datum">Datum *</label>
+              <input type="date" id="datum"/>
+            </div>
+            <div class="field-group" id="veld-tijd" style="display:none;">
+              <label for="tijd">Tijd *</label>
+              <input type="time" id="tijd"/>
+            </div>
+            <div class="field-group" id="veld-looptijd" style="display:none;">
+              <label for="looptijd">Looptijd (maanden) *</label>
+              <input type="number" id="looptijd" min="1" placeholder="24"/>
+            </div>
+            <div class="field-group" id="veld-kilometers" style="display:none;">
+              <label for="kilometers">Kilometers per jaar *</label>
+              <input type="number" id="kilometers" min="0" placeholder="20000"/>
+            </div>
+            <div class="field-group" id="veld-eigenrisico" style="display:none;">
+              <label for="eigenrisico">Eigen risico (€) *</label>
+              <input type="number" id="eigenrisico" min="0" placeholder="500"/>
+            </div>
+            <div class="field-group" id="veld-maandbedrag" style="display:none;">
+              <label for="maandbedrag">Maandbedrag (€) *</label>
+              <input type="number" id="maandbedrag" min="0" placeholder="299"/>
+            </div>
+            <div class="field-group" id="veld-banden" style="display:none;">
+              <label for="banden">Type banden *</label>
+              <select id="banden">
+                <option value="">-- Kies type banden --</option>
+                <option value="Zomerbanden">Zomerbanden</option>
+                <option value="Winterbanden">Winterbanden</option>
+                <option value="Allseason banden">Allseason banden</option>
+              </select>
+            </div>
+            <div class="field-group" id="veld-leverdatum" style="display:none;">
+              <label for="leverdatum">Leverdatum *</label>
+              <input type="date" id="leverdatum"/>
+            </div>
+          </fieldset>
+          
+          <!-- Knoppen -->
+          <div class="button-row">
+            <button type="button" id="generateBtn" disabled>
+              📧 Genereer e-mail
+            </button>
+            <button type="button" id="outlookBtn" style="display:none;">
+              ✉️ Open in Outlook
+            </button>
+            <button type="button" class="copy-btn" onclick="kopieerTekst()">
+              📋 Kopieer tekst
+            </button>
+          </div>
+        </form>
+      </section>
+      
+      <!-- Preview -->
+      <section class="preview-section">
+        <h2>👁️ Preview</h2>
+        <div id="output">Vul het formulier in om een e-mail te genereren...</div>
+        <div id="feedback"></div>
+      </section>
+    </main>
+  </div>
+  
+  <script>
+    // Wittebrug E-mailtool – Verbeterde versie
+    const seatModels = ["Ibiza", "Leon", "Leon Sportstourer", "Arona", "Ateca"];
+    const cupraModels = ["Born", "Formentor", "Leon", "Leon Sportstourer", "Terramar", "Tavascan"];
+
+    // Helper: vertaalt NL-duur naar Engels
+    function translateDuration(text) {
+      if (!text) return '';
+      const mapping = {
+        'weken': 'weeks',
+        'week': 'week',
+        'maanden': 'months',
+        'maand': 'month',
+        'dagen': 'days',
+        'dag': 'day'
+      };
+      return text.replace(/(\d+)\s*(weken|week|maanden|maand|dagen|dag)/gi,
+        (_, num, unit) => `${num} ${mapping[unit.toLowerCase()]}`);
+    }
+
+    // Prijsformatter NL
+    function formatPriceNL(val) {
+      const n = Number(val) || 0;
+      return '€ ' + new Intl.NumberFormat('nl-NL').format(n) + ',-';
+    }
+
+    // Datum formatter
+    function formatDate(dateStr, lang = 'nl') {
+      if (!dateStr) return '';
+      const date = new Date(dateStr);
+      if (lang === 'nl') {
+        return date.toLocaleDateString('nl-NL', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+      } else {
+        return date.toLocaleDateString('en-US', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+      }
+    }
+
+    // Tijd formatter
+    function formatTime(timeStr) {
+      if (!timeStr) return '';
+      return timeStr;
+    }
+
+    let currentLang = 'nl';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      populateModels();
+      toggleFields();
+      validateForm();
+
+      document.getElementById('merk').addEventListener('change', () => {
+        populateModels(); 
+        validateForm();
+      });
+      
+      document.getElementById('emailtype').addEventListener('change', () => {
+        toggleFields(); 
+        validateForm();
+      });
+      
+      document.getElementById('languageSelect').addEventListener('change', e => {
+        currentLang = e.target.value;
+        if (document.getElementById('output').innerText !== 'Vul het formulier in om een e-mail te genereren...') {
+          generateEmail();
+        }
+      });
+
+      document.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('input', () => {
+          toggleFields(); 
+          validateForm();
+        });
+      });
+
+      document.getElementById('generateBtn').addEventListener('click', generateEmail);
+      document.getElementById('outlookBtn').addEventListener('click', openOutlook);
+    });
+
+    function populateModels() {
+      const m = document.getElementById('merk').value;
+      const sel = document.getElementById('model');
+      sel.innerHTML = '<option value="">-- Kies model --</option>';
+      const list = m === 'SEAT' ? seatModels : (m === 'CUPRA' ? cupraModels : []);
+      list.forEach(x => sel.innerHTML += `<option value="${x}">${x}</option>`);
+    }
+
+    function toggleFields() {
+      const groups = {
+        offerte: ['prijs', 'levertijd'],
+        inruil: ['prijs', 'levertijd', 'inruilprijs', 'kenteken'],
+        proefrit: ['datum', 'tijd'],
+        afspraak: ['datum', 'tijd'],
+        showroom: ['prijs', 'levertijd'],
+        lease: ['looptijd', 'kilometers', 'eigenrisico', 'maandbedrag', 'banden'],
+        followup: [],
+        status: ['leverdatum']
+      };
+      
+      const type = document.getElementById('emailtype').value;
+      const all = ['prijs', 'levertijd', 'inruilprijs', 'kenteken', 'datum', 'tijd', 'looptijd', 'kilometers', 'eigenrisico', 'maandbedrag', 'banden', 'leverdatum'];
+      
+      all.forEach(id => {
+        const el = document.getElementById('veld-' + id);
+        if (el) {
+          el.style.display = (groups[type] || []).includes(id) ? 'block' : 'none';
+        }
+      });
+    }
+
+    function validateForm() {
+      const req = ['aanhef', 'voornaam', 'achternaam', 'merk', 'model', 'emailtype'];
+      let ok = req.every(id => {
+        const el = document.getElementById(id);
+        const isValid = !!el.value;
+        el.classList.toggle('validation-error', !isValid);
+        return isValid;
+      });
+      
+      const type = document.getElementById('emailtype').value;
+      const groups = {
+        offerte: ['prijs', 'levertijd'],
+        inruil: ['prijs', 'levertijd', 'inruilprijs', 'kenteken'],
+        proefrit: ['datum', 'tijd'],
+        afspraak: ['datum', 'tijd'],
+        showroom: ['prijs', 'levertijd'],
+        lease: ['looptijd', 'kilometers', 'eigenrisico', 'maandbedrag', 'banden'],
+        followup: [],
+        status: ['leverdatum']
+      };
+      
+      (groups[type] || []).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          const isValid = !!el.value;
+          el.classList.toggle('validation-error', !isValid);
+          if (!isValid) ok = false;
+        }
+      });
+      
+      document.getElementById('generateBtn').disabled = !ok;
+    }
+
+    function generateEmail() {
+      const d = {
+        naam: document.getElementById('voornaam').value.trim(),
+        ak: document.getElementById('achternaam').value.trim(),
+        merk: document.getElementById('merk').value,
+        model: document.getElementById('model').value,
+        prijs: document.getElementById('prijs').value,
+        levertijd: document.getElementById('levertijd').value,
+        inruilprijs: document.getElementById('inruilprijs').value,
+        kenteken: document.getElementById('kenteken').value,
+        datum: document.getElementById('datum').value,
+        tijd: document.getElementById('tijd').value,
+        looptijd: document.getElementById('looptijd').value,
+        kilometers: document.getElementById('kilometers').value,
+        eigenrisico: document.getElementById('eigenrisico').value,
+        maandbedrag: document.getElementById('maandbedrag').value,
+        banden: document.getElementById('banden').value,
+        leverdatum: document.getElementById('leverdatum').value
+      };
+      
+      // Aanhef-bepaling
+      const a = document.getElementById('aanhef').value;
+      let greet = '';
+      if (currentLang === 'nl') {
+        if (a === 'voornaam') greet = `Beste ${d.naam},`;
+        else if (a === 'heer') greet = `Beste meneer ${d.ak},`;
+        else greet = `Beste mevrouw ${d.ak},`;
+      } else {
+        if (a === 'voornaam') greet = `Dear ${d.naam},`;
+        else if (a === 'heer') greet = `Dear Mr. ${d.ak},`;
+        else greet = `Dear Ms. ${d.ak},`;
+      }
+      
+      // Nederlandse templates
+      const tplNL = {
+        offerte: d => `${greet}
+
+Hartelijk dank voor uw interesse in de ${d.merk} ${d.model}.
+
+De totale aanschafprijs bedraagt ${formatPriceNL(d.prijs)}
+De geschatte levertijd is circa ${d.levertijd} na akkoord.
+
+In de bijlage vindt u de complete offerte met alle specificaties en opties.
+
+U bent van harte welkom in onze showroom voor een bezichtiging of proefrit. 
+Mocht u nog vragen hebben, dan hoor ik dat graag van u.`,
+
+        inruil: d => `${greet}
+
+Hartelijk dank voor uw interesse in de ${d.merk} ${d.model}.
+
+De totale aanschafprijs bedraagt ${formatPriceNL(d.prijs)}
+Voor uw huidige auto (${d.kenteken}) kunnen wij ${formatPriceNL(d.inruilprijs)} inruil bieden.
+Uw totale investering komt daarmee uit op ${formatPriceNL(d.prijs - d.inruilprijs)}
+
+De geschatte levertijd is circa ${d.levertijd} na akkoord.
+
+In de bijlage vindt u de complete offerte inclusief inruilwaardering.
+
+Graag plan ik een afspraak in om de inruilauto te bekijken en de nieuwe auto te bespreken.`,
+
+        proefrit: d => `${greet}
+
+Hierbij bevestig ik uw proefrit afspraak voor de ${d.merk} ${d.model}.
+
+Datum: ${formatDate(d.datum)}
+Tijd: ${formatTime(d.tijd)}
+
+U kunt zich melden bij de receptie. Zorg ervoor dat u uw rijbewijs meeneemt.
+Tijdens de proefrit krijgt u alle informatie over de auto en kunnen we uw vragen beantwoorden.
+
+Mocht u de afspraak moeten verzetten, neem dan contact met ons op.`,
+
+        afspraak: d => `${greet}
+
+Hierbij bevestig ik onze afspraak aangaande de ${d.merk} ${d.model}.
+
+Datum: ${formatDate(d.datum)}
+Tijd: ${formatTime(d.tijd)}
+
+Tijdens dit gesprek bespreken we uw wensen en kunnen we een passend voorstel doen.
+U bent welkom in onze showroom waar u de auto kunt bekijken.
+
+Mocht u de afspraak moeten verzetten, laat het me dan weten.`,
+
+        showroom: d => `${greet}
+
+Graag nodig ik u uit voor een bezoek aan onze showroom om de ${d.merk} ${d.model} te bekijken.
+
+De totale aanschafprijs bedraagt ${formatPriceNL(d.prijs)}
+De geschatte levertijd is circa ${d.levertijd} na akkoord.
+
+In onze showroom kunt u:
+- De auto van dichtbij bekijken
+- Een proefrit maken
+- Alle opties en accessoires bekijken
+- Uw financieringsmogelijkheden bespreken
+
+Onze openingstijden zijn ma-vr 9:00-18:00 en za 9:00-17:00.
+Voor een proefrit maken we graag een afspraak.`,
+
+        lease: d => `${greet}
+
+Hartelijk dank voor uw interesse in private lease van de ${d.merk} ${d.model}.
+
+Uw private lease voorstel:
+- Looptijd: ${d.looptijd} maanden  
+- Kilometers per jaar: ${Number(d.kilometers).toLocaleString('nl-NL')} km
+- Maandbedrag: ${formatPriceNL(d.maandbedrag)} (incl. BTW)
+- Eigen risico: ${formatPriceNL(d.eigenrisico)}
+- Type banden: ${d.banden}
+
+In het maandbedrag is inbegrepen:
+- Wegenbelasting
+- Verzekering (WA, casco, inzittenden)
+- Onderhoud en reparaties
+- APK
+- Pechhulp
+
+In de bijlage vindt u de volledige lease offerte met alle voorwaarden.`,
+
+        followup: d => `${greet}
+
+Een week geleden hebben we u een offerte gestuurd voor de ${d.merk} ${d.model}.
+
+Ik wilde even checken of u nog vragen heeft over het voorstel, of dat ik ergens mee kan helpen bij uw beslissing.
+
+Mocht u aanvullende informatie willen, een proefrit willen maken, of andere vragen hebben, dan hoor ik dat graag.
+
+Ook als u besluit niet bij ons te kopen, stel ik feedback op prijs zodat wij onze service kunnen verbeteren.`,
+
+        status: d => `${greet}
+
+Hierbij een update over de levering van uw ${d.merk} ${d.model}.
+
+Verwachte leverdatum: ${formatDate(d.leverdatum)}
+
+We houden u op de hoogte van eventuele wijzigingen in het levermoment.
+Ongeveer een week voor levering nemen we contact op om de aflevering af te spreken.
+
+Mocht u vragen hebben over de levering, neem dan gerust contact op.
+
+Met vriendelijke groet,
+
+Uw verkoopadviseur
+Wittebrug Automotive`
+      };
+
+      // Engelse templates
+      const tplEN = {
+        offerte: d => `${greet}
+
+Thank you for your interest in the ${d.merk} ${d.model}.
+
+The total purchase price is ${formatPriceNL(d.prijs)} including delivery costs.
+The estimated delivery time is approximately ${translateDuration(d.levertijd)} upon confirmation.
+
+You'll find the complete quote with all specifications and options attached.
+
+You're welcome to visit our showroom for a viewing or test drive.
+If you have any questions, please don't hesitate to contact me.`,
+
+        inruil: d => `${greet}
+
+Thank you for your interest in the ${d.merk} ${d.model}.
+
+The total purchase price is ${formatPriceNL(d.prijs)}
+For your current car (${d.kenteken}) we can offer ${formatPriceNL(d.inruilprijs)} as trade-in value.
+Your total investment would be ${formatPriceNL(d.prijs - d.inruilprijs)}
+
+The estimated delivery time is approximately ${translateDuration(d.levertijd)} upon confirmation.
+
+You'll find the complete quote including trade-in valuation attached.
+
+I'd like to schedule an appointment to inspect your trade-in vehicle and discuss the new car.`,
+
+        proefrit: d => `${greet}
+
+This confirms your test drive appointment for the ${d.merk} ${d.model}.
+
+Date: ${formatDate(d.datum, 'en')}
+Time: ${formatTime(d.tijd)}
+
+Please report to reception and bring your driving license.
+During the test drive, you'll receive all information about the car and we can answer your questions.
+
+If you need to reschedule, please contact us.`,
+
+        afspraak: d => `${greet}
+
+This confirms our appointment regarding the ${d.merk} ${d.model}.
+
+Date: ${formatDate(d.datum, 'en')}
+Time: ${formatTime(d.tijd)}
+
+During this meeting we'll discuss your requirements and can make a suitable proposal.
+You're welcome in our showroom where you can view the car.
+
+If you need to reschedule, please let me know.`,
+
+        showroom: d => `${greet}
+
+I'd like to invite you to visit our showroom to view the ${d.merk} ${d.model}.
+
+The total purchase price is ${formatPriceNL(d.prijs)}
+The estimated delivery time is approximately ${translateDuration(d.levertijd)} upon confirmation.
+
+In our showroom you can:
+- View the car up close
+- Take a test drive
+- See all options and accessories
+- Discuss your financing options
+
+Our opening hours are Mon-Fri 9:00-18:00 and Sat 9:00-17:00.
+We'd be happy to schedule an appointment for a test drive.`,
+
+        lease: d => `${greet}
+
+Thank you for your interest in private leasing the ${d.merk} ${d.model}.
+
+Your private lease proposal:
+- Contract term: ${d.looptijd} months
+- Kilometers per year: ${Number(d.kilometers).toLocaleString('en-US')} km
+- Monthly payment: ${formatPriceNL(d.maandbedrag)} (incl. VAT)
+- Deductible: ${formatPriceNL(d.eigenrisico)}
+- Tire type: ${d.banden}
+
+The monthly payment includes:
+- Road tax
+- Insurance (liability, comprehensive, occupants)
+- Maintenance and repairs
+- MOT
+- Roadside assistance
+
+You'll find the complete lease quote with all terms attached.`,
+
+        followup: d => `${greet}
+
+A week ago we sent you a quote for the ${d.merk} ${d.model}.
+
+I wanted to check if you have any questions about the proposal, or if I can help you with your decision in any way.
+
+If you'd like additional information, want to schedule a test drive, or have other questions, I'd be happy to hear from you.
+
+Even if you decide not to purchase from us, I appreciate feedback so we can improve our service.`,
+
+        status: d => `${greet}
+
+Here's an update on the delivery of your ${d.merk} ${d.model}.
+
+Expected delivery date: ${formatDate(d.leverdatum, 'en')}
+
+We'll keep you informed of any changes to the delivery timing.
+About a week before delivery, we'll contact you to arrange the handover.
+
+If you have any questions about the delivery, please don't hesitate to contact us.`
+      };
+
+      const type = document.getElementById('emailtype').value;
+      const templates = currentLang === 'en' ? tplEN : tplNL;
+      
+      if (templates[type]) {
+        const body = templates[type](d);
+        document.getElementById('output').innerText = body;
+        document.getElementById('outlookBtn').style.display = 'inline-flex';
+      } else {
+        document.getElementById('output').innerText = 'Template niet gevonden voor dit email type.';
+      }
+    }
+
+    function openOutlook() {
+      const subject = currentLang === 'nl' ? 'Voorstel Wittebrug' : 'Your Quote from Wittebrug';
+      const body = encodeURIComponent(document.getElementById('output').innerText);
+      window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${body}`;
+    }
+
+    function kopieerTekst() {
+      const output = document.getElementById('output');
+      const feedback = document.getElementById('feedback');
+      
+      if (output.innerText === 'Vul het formulier in om een e-mail te genereren...') {
+        showFeedback('Geen tekst om te kopiëren. Genereer eerst een e-mail.', 'error');
+        return;
+      }
+      
+      navigator.clipboard.writeText(output.innerText)
+        .then(() => {
+          showFeedback(currentLang === 'nl' ? '✅ Tekst gekopieerd!' : '✅ Text copied!', 'success');
+        })
+        .catch(() => {
+          showFeedback(currentLang === 'nl' ? '❌ Kopiëren mislukt' : '❌ Copy failed', 'error');
+        });
+    }
+
+    function showFeedback(message, type) {
+      const feedback = document.getElementById('feedback');
+      feedback.innerText = message;
+      feedback.className = `show ${type}`;
+      setTimeout(() => {
+        feedback.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
